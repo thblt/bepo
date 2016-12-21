@@ -46,15 +46,15 @@ use Data::Dumper;
 
 binmode STDOUT, ":utf8";
 
-die("Usage: $0 <version> <output format>\n")
-    if (!defined($ARGV[1]));
+die("Usage: $0 <output format>\n")
+    if (!defined($ARGV[0]));
 
-my $VERSION            = $ARGV[0];
-my $OUTPUT_FORMAT      = $ARGV[1];
+my $VERSION = "1.0";
+my $OUTPUT_FORMAT      = $ARGV[0];
 
-my $LAYOUT_DESCRIPTION = "layout-$VERSION.conf";
-my $DEAKEY_BEHAVIOUR   = "deads-$VERSION.conf";
-my $VIRTUAL_KEYS       = "virtualKeys-$VERSION.conf";
+my $LAYOUT_DESCRIPTION = "layout.conf";
+my $DEAKEY_BEHAVIOUR   = "deads.conf";
+my $VIRTUAL_KEYS       = "virtualKeys.conf";
 
 my $KEYS_FILE         = "keys.conf";
 my $SPECIAL_KEYS_FILE = "specialKeys.conf";
