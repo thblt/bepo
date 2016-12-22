@@ -2,3 +2,4 @@
 *.iml
 **/__pycache__
 *.pyc
+_Deparsed_XSubs.pm
