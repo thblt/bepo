@@ -86,9 +86,9 @@ from terminators import terminators
 
 
 def char(k):
-  if k == '':
+  if k == '' or k == '#':
     return u''
-  if not composeNames.has_key(k) and k[0] == 'U' and len(k) == 5 and ishex(k[1:]):
+  if not composeNames.has_key(k) and k[0] == 'U' and len(k) >= 4 and ishex(k[1:]):
     C = unichr(int(k[1:], 16))
     k = k.upper()
     if composeChars.has_key(C):
