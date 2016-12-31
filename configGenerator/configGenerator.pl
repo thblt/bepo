@@ -335,7 +335,7 @@ sub gen_x_xkb_user_header()
 {
     my $header = "xkb_keymap        {\n".
                  "\n".
-                 "xkb_keycodes      { include \"xfree86+aliases(azerty)\" };\n".
+                 "xkb_keycodes      { include \"evdev+aliases(azerty)\" };\n".
                  "\n".
                  "xkb_types         { include \"complete\" };\n".
                  "\n".
