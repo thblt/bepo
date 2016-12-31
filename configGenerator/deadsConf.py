@@ -30,8 +30,10 @@ composeDeadKeys = {}
 
 fCompose = file(defaults.composeFile)
 
+validEntryPattern = re.compile(r'<.+>.*<.+>.*:') # Valid compose entry should have at least two <symbols> before colon
+
 for l in fCompose:
-  if not l.startswith("XCOMM") and not l.startswith("##") and "<Multi_key>" not in l and len(l.strip()) != 0:# and "<KP_" not in l and "<underbar>" not in l and "<rightcaret>" not in l and "<leftshoe>" not in l and "<leftcaret>" not in l and "<rightshoe>" not in l and "<U223C>" not in l:
+  if validEntryPattern.match(l) and not l.startswith("XCOMM") and not l.startswith("#") and "<Multi_key>" not in l and len(l.strip()) != 0:# and "<KP_" not in l and "<underbar>" not in l and "<rightcaret>" not in l and "<leftshoe>" not in l and "<leftcaret>" not in l and "<rightshoe>" not in l and "<U223C>" not in l:
     seq = re.findall('<([^ ]+)>', l.split(":")[0])
     seq = [compose.upperUnicode(s) for s in seq]
     if compose.areSupportedChars(seq):
@@ -81,7 +83,8 @@ for m in sorted([m for m in dead_keys.dmm if len(m) == 1]):
       print m[0], m[0]
   else:
     tag = ""
-  print >> f, "%s%s%s\t%s\t%s" % (comm, tag, deadName, deadName, compose.name(terminators[m[0]]))
+  if m[0] in terminators:
+    print >> f, "%s%s%s\t%s\t%s" % (comm, tag, deadName, deadName, compose.name(terminators[m[0]]))
   
   if composeDeadKeys.has_key((m[0], u" ")):
     tag = "L!"
@@ -89,7 +92,8 @@ for m in sorted([m for m in dead_keys.dmm if len(m) == 1]):
       print m[0], "nobreakspace"
   else:
     tag = ""
-  print >> f, "%s%s%s\t%s\t%s" % (comm, tag, deadName, "nobreakspace", compose.name(combiningTerminators[m[0]]))
+  if m[0] in terminators:
+    print >> f, "%s%s%s\t%s\t%s" % (comm, tag, deadName, "nobreakspace", compose.name(combiningTerminators[m[0]]))
   
   if composeDeadKeys.has_key((m[0], u" ")):
     tag = "L!"
@@ -97,7 +101,8 @@ for m in sorted([m for m in dead_keys.dmm if len(m) == 1]):
       print "Warning:", m[0], "space is different in Compose:", composeDeadKeys[(m[0], u" ")], spaceTerminators[m[0]]
   else:
     tag = ""
-  print >> f, "%s%s%s\t%s\t%s" % (comm, tag, deadName, "space", compose.name(spaceTerminators[m[0]]))
+  if m[0] in terminators:
+    print >> f, "%s%s%s\t%s\t%s" % (comm, tag, deadName, "space", compose.name(spaceTerminators[m[0]]))
   
   print >> f
 
