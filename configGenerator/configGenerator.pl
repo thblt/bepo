@@ -56,6 +56,7 @@ my $OUTPUT_FORMAT      = $ARGV[0];
 my $LAYOUT_DESCRIPTION = "layout.conf";
 my $DEAKEY_BEHAVIOUR   = "deads.conf";
 my $VIRTUAL_KEYS       = "virtualKeys.conf";
+my $DOUBLE_DEADKEY_BEHAVIOUR = "double-dead-keys.conf";
 
 my $KEYS_FILE         = "keys.conf";
 my $SPECIAL_KEYS_FILE = "specialKeys.conf";
@@ -90,6 +91,7 @@ my %layoutSyms = ();
 
 my @deadKeysA = ();
 my %deadKeysH = ();
+my %doubleDeadKeys = ();
 
 my %unicodesDescription = ();
 
@@ -288,6 +290,27 @@ sub loadDeadKeys()
 
 #print Dumper(\@deadKeysA);
 #print Dumper(\%deadKeysH);
+}
+
+sub loadDoubleDeadKeys()
+{
+    open(FILE, "< $DOUBLE_DEADKEY_BEHAVIOUR") or die("open: $!");
+
+    LINE: while(<FILE>)
+    {
+        next LINE if (/^(#.*|\s*)$/);
+
+        if (/^(.*?) ?= ?(.*?)$/)
+        {
+            my $sourceKey = $1;
+            my $targetKey = $2;
+            $doubleDeadKeys{$targetKey} = $sourceKey;
+        }
+    }
+
+    close(FILE);
+
+#print Dumper(\%doubleDeadKeys);
 }
 
 sub loadUnicode()
@@ -551,14 +574,28 @@ sub gen_x_compose_body()
         my $line = "";
         for my $key (@keyCombo)
         {
-            if (!defined($symbols{$key}))
+            if (defined($doubleDeadKeys{$key}))
             {
-                print STDERR "Unknown symbol: ".$key."\n";
-                $failed = 1;
+                my $doubledDeadKey = $doubleDeadKeys{$key};
+
+                if (defined($symbols{$doubledDeadKey}))
+                {
+                    $line .= "<".$symbols{$doubledDeadKey}."> <".$symbols{$doubledDeadKey}."> ";
+                }
+                else
+                {
+                    print STDERR "Unknown symbol: ".$key."\n";
+                    $failed = 1;
+                }
+            }
+            elsif (defined($symbols{$key}))
+            {
+                $line .= "<".$symbols{$key}."> ";
             }
             else
             {
-                $line .= "<".$symbols{$key}."> ";
+                print STDERR "Unknown symbol: ".$key."\n";
+                $failed = 1;
             }
         }
 
@@ -1019,6 +1056,7 @@ sub gen_x_compose()
 {
     &loadSymbols($x_xkb_column);
     &loadDeadKeys();
+    &loadDoubleDeadKeys();
 
     my $header = &gen_x_compose_header();
     my $body   = &gen_x_compose_body();
