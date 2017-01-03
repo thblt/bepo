@@ -64,14 +64,10 @@ composeNames["dead_ogonek"] = u"ogonek"
 composeNames["dead_psili"] = u"psili"
 composeNames["dead_tilde"] = u"tilde"
 composeNames["dead_stroke"] = u"stroke"
-composeNames["UFDD0"] = u"stroke"
 composeNames["dead_currency"] = u"currency"
-composeNames["UFDD1"] = u"currency"
 composeNames["Multi_key"] = u"Multi_key"
 composeNames["dead_greek"] = u"greek"
-composeNames["UFDD2"] = u"greek"
-composeNames["dead_commabelow"] = u"commabelow"
-composeNames["UFDD3"] = u"commabelow"
+composeNames["dead_belowcomma"] = u"commabelow"
 composeNames["dead_hook"] = u"hook"
 composeNames["dead_horn"] = u"horn"
 composeNames["dead_belowdot"] = u"belowdot"
@@ -161,6 +157,8 @@ for S in outputs.keys():
 
 charActions = {}
 for a in set(statesByAction.keys() + outputsByAction.keys()):
+  # Check there are no items have different name but same unicode point
+  # For instance, we once had both includedin and U2282 in the Compose file
   if charActions.has_key(char(a)) :
     print (a, char(a), charActions[char(a)])
   charActions[char(a)] = a

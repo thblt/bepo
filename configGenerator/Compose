@@ -5887,10 +5887,10 @@
 <Multi_key> <underscore> <less>                 : "≤"   U2264   # _ < LESS-THAN OR EQUAL TO
 <Multi_key> <greater> <underscore>              : "≥"   U2265   # > _ GREATER-THAN OR EQUAL TO
 <Multi_key> <underscore> <greater>              : "≥"   U2265   # _ > GREATER-THAN OR EQUAL TO
-<Multi_key> <underscore> <U2282>                : "⊆"   U2286   # _ ⊂ SUBSET OF OR EQUAL TO
-<Multi_key> <U2282> <underscore>                : "⊆"   U2286   # ⊂ _ SUBSET OF OR EQUAL TO
-<Multi_key> <underscore> <U2283>                : "⊇"   U2287   # _ ⊃ SUPERSET OF OR EQUAL TO
-<Multi_key> <U2283> <underscore>                : "⊇"   U2287   # ⊃ _ SUPERSET OF OR EQUAL TO
+<Multi_key> <underscore> <includedin>           : "⊆"   U2286   # _ ⊂ SUBSET OF OR EQUAL TO
+<Multi_key> <includedin> <underscore>           : "⊆"   U2286   # ⊂ _ SUBSET OF OR EQUAL TO
+<Multi_key> <underscore> <includes>             : "⊇"   U2287   # _ ⊃ SUPERSET OF OR EQUAL TO
+<Multi_key> <includes> <underscore>             : "⊇"   U2287   # ⊃ _ SUPERSET OF OR EQUAL TO
 <Multi_key> <U25cb> <minus>                     : "⊖"   U2296   # ○ - CIRCLED MINUS
 <Multi_key> <minus> <U25cb>                     : "⊖"   U2296   # - ○ CIRCLED MINUS
 <Multi_key> <U25cb> <period>                    : "⊙"   U2299   # ○ - CIRCLED DOT
@@ -5934,14 +5934,14 @@
 <Multi_key> <U2395> <less>                      : "⍃"   U2343   # ⎕ < APL FUNCTIONAL SYMBOL QUAD LESS-THAN
 <Multi_key> <greater> <U2395>                   : "⍄"   U2344   # > ⎕ APL FUNCTIONAL SYMBOL QUAD GREATER-THAN
 <Multi_key> <U2395> <greater>                   : "⍄"   U2344   # ⎕ > APL FUNCTIONAL SYMBOL QUAD GREATER-THAN
-<Multi_key> <U2190> <bar>                       : "⍅"   U2345   # ← | APL FUNCTIONAL SYMBOL LEFTWARDS VANE
-<Multi_key> <bar> <U2190>                       : "⍅"   U2345   # | ← APL FUNCTIONAL SYMBOL LEFTWARDS VANE
-<Multi_key> <U2192> <bar>                       : "⍆"   U2346   # → | APL FUNCTIONAL SYMBOL RIGHTWARDS VANE
-<Multi_key> <bar> <U2192>                       : "⍆"   U2346   # | → APL FUNCTIONAL SYMBOL RIGHTWARDS VANE
-<Multi_key> <U2190> <U2395>                     : "⍇"   U2347   # ← ⎕ APL FUNCTIONAL SYMBOL QUAD LEFTWARDS ARROW
-<Multi_key> <U2395> <U2190>                     : "⍇"   U2347   # ⎕ ← APL FUNCTIONAL SYMBOL QUAD LEFTWARDS ARROW
-<Multi_key> <U2192> <U2395>                     : "⍈"   U2348   # → ⎕ APL FUNCTIONAL SYMBOL QUAD RIGHTWARDS ARROW
-<Multi_key> <U2395> <U2192>                     : "⍈"   U2348   # ⎕ → APL FUNCTIONAL SYMBOL QUAD RIGHTWARDS ARROW
+<Multi_key> <leftarrow> <bar>                   : "⍅"   U2345   # ← | APL FUNCTIONAL SYMBOL LEFTWARDS VANE
+<Multi_key> <bar> <leftarrow>                   : "⍅"   U2345   # | ← APL FUNCTIONAL SYMBOL LEFTWARDS VANE
+<Multi_key> <rightarrow> <bar>                  : "⍆"   U2346   # → | APL FUNCTIONAL SYMBOL RIGHTWARDS VANE
+<Multi_key> <bar> <rightarrow>                  : "⍆"   U2346   # | → APL FUNCTIONAL SYMBOL RIGHTWARDS VANE
+<Multi_key> <leftarrow> <U2395>                 : "⍇"   U2347   # ← ⎕ APL FUNCTIONAL SYMBOL QUAD LEFTWARDS ARROW
+<Multi_key> <U2395> <leftarrow>                 : "⍇"   U2347   # ⎕ ← APL FUNCTIONAL SYMBOL QUAD LEFTWARDS ARROW
+<Multi_key> <rightarrow> <U2395>                : "⍈"   U2348   # → ⎕ APL FUNCTIONAL SYMBOL QUAD RIGHTWARDS ARROW
+<Multi_key> <U2395> <rightarrow>                : "⍈"   U2348   # ⎕ → APL FUNCTIONAL SYMBOL QUAD RIGHTWARDS ARROW
 <Multi_key> <U25cb> <backslash>                 : "⍉"   U2349   # ○ \ APL FUNCTIONAL SYMBOL CIRCLE SLOPE
 <Multi_key> <backslash> <U25cb>                 : "⍉"   U2349   # \ ○ APL FUNCTIONAL SYMBOL CIRCLE SLOPE
 <Multi_key> <underscore> <U22a5>                : "⍊"   U234a   # _ ⊥ APL FUNCTIONAL SYMBOL DOWN TACK UNDERBAR
@@ -6007,8 +6007,8 @@
 <Multi_key> <diaeresis> <U25cb>                 : "⍥"   U2365   # ¨ ○ APL FUNCTIONAL SYMBOL CIRCLE DIAERESIS
 <Multi_key> <U222a> <bar>                       : "⍦"   U2366   # ∪ | APL FUNCTIONAL SYMBOL DOWN SHOE STILE
 <Multi_key> <bar> <U222a>                       : "⍦"   U2366   # | ∪ APL FUNCTIONAL SYMBOL DOWN SHOE STILE
-<Multi_key> <U2282> <bar>                       : "⍧"   U2367   # ⊂ | APL FUNCTIONAL SYMBOL LEFT SHOE STILE
-<Multi_key> <bar> <U2282>                       : "⍧"   U2367   # | ⊂ APL FUNCTIONAL SYMBOL LEFT SHOE STILE
+<Multi_key> <includedin> <bar>                  : "⍧"   U2367   # ⊂ | APL FUNCTIONAL SYMBOL LEFT SHOE STILE
+<Multi_key> <bar> <includedin>                  : "⍧"   U2367   # | ⊂ APL FUNCTIONAL SYMBOL LEFT SHOE STILE
 <Multi_key> <asciitilde> <diaeresis>            : "⍨"   U2368   # ~ ¨ APL FUNCTIONAL SYMBOL TILDE DIAERESIS
 <Multi_key> <diaeresis> <greater>               : "⍩"   U2369   # ¨ > APL FUNCTIONAL SYMBOL GREATER-THAN DIAERESIS
 <Multi_key> <greater> <diaeresis>               : "⍩"   U2369   # > ¨ APL FUNCTIONAL SYMBOL GREATER-THAN DIAERESIS
