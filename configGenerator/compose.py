@@ -157,6 +157,8 @@ for S in outputs.keys():
 
 charActions = {}
 for a in set(statesByAction.keys() + outputsByAction.keys()):
+  # Check there are no items have different name but same unicode point
+  # For instance, we once had both includedin and U2282 in the Compose file
   if charActions.has_key(char(a)) :
     print (a, char(a), charActions[char(a)])
   charActions[char(a)] = a
