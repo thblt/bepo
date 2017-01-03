@@ -43,6 +43,7 @@ use strict;
 use warnings;
 use locale;
 use Data::Dumper;
+use utf8;
 
 binmode STDOUT, ":utf8";
 
