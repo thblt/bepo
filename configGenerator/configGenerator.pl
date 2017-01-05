@@ -50,8 +50,9 @@ binmode STDOUT, ":utf8";
 die("Usage: $0 <output format>\n")
     if (!defined($ARGV[0]));
 
-my $VERSION = "1.0";
 my $OUTPUT_FORMAT      = $ARGV[0];
+my $VERSION = "1.1";
+
 
 my $LAYOUT_DESCRIPTION = "layout.conf";
 my $DEAKEY_BEHAVIOUR   = "deads.conf";
@@ -62,7 +63,7 @@ my $KEYS_FILE         = "keys.conf";
 my $SPECIAL_KEYS_FILE = "specialKeys.conf";
 my $SYMBOLS_FILE      = "symbols.conf";
 
-my $UNICODE_FILE = "UnicodeData-5.0.0.fr.txt";
+my $UNICODE_FILE = "UnicodeData-9.0.b6.partial.fr.txt";
 
 my $SHORT_VERSION = $VERSION;
 $SHORT_VERSION =~ tr/\.//d;
