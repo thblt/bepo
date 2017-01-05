@@ -993,6 +993,7 @@ sub gen_win_msklc_footer()
                  "0309\t\"HOOK ABOVE\"\r\n".
                  "031b\t\"HORN\"\r\n".
                  "0323\t\"DOT BELOW\"\r\n".
+                 "00df\t\"LATIN\"\r\n".
                  "\r\n".
                  "\r\n".
                  "DESCRIPTIONS\r\n".
