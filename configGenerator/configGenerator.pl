@@ -995,6 +995,7 @@ sub gen_win_msklc_footer()
                  "0323\t\"DOT BELOW\"\r\n".
                  "00df\t\"LATIN\"\r\n".
                  "1d40\t\"SUPERSCRIPT\"\r\n".
+                 "221e\t\"SCIENCE\"\r\n".
                  "\r\n".
                  "\r\n".
                  "DESCRIPTIONS\r\n".
