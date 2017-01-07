@@ -178,7 +178,7 @@ sub loadSymbols($)
         s/#.*$//g;
         my @array = ();
 
-        if (/^U([0-9A-Z]{4})$/)
+        if (/^U([0-9A-Z]{4,})$/)
         {
             my $unicode = $1;
             @array = ("U".$unicode, $unicode, "U".$unicode, "U".$unicode, lc($unicode));
