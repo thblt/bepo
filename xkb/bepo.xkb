@@ -9,7 +9,7 @@ xkb_compatibility { include "complete" };
 partial alphanumeric_keys
 xkb_symbols "dvorak" {
 
-	name[Group1]= "France - Bepo, ergonomic, Dvorak way (v1.0rc3)";
+	name[Group1]= "France - Bepo, ergonomic, Dvorak way (v1.0)";
 
 	include "pc(pc105)"
 
@@ -35,7 +35,7 @@ xkb_symbols "dvorak" {
 	key <AD06> { type[group1] = "THREE_LEVEL", [ dead_circumflex, exclam, exclamdown ] }; // ^ ! ¡
 	key <AD07> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ v, V, dead_caron ] }; // v V ˇ
 	key <AD08> { type[group1] = "FOUR_LEVEL_ALPHABETIC", [ d, D, eth, ETH ] }; // d D ð Ð
-	key <AD09> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ l, L, UFDD0 ] }; // l L /
+	key <AD09> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ l, L, dead_stroke ] }; // l L /
 	key <AD10> { type[group1] = "FOUR_LEVEL_ALPHABETIC", [ j, J, U0133, U0132 ] }; // j J ĳ Ĳ
 	key <AD11> { type[group1] = "FOUR_LEVEL_ALPHABETIC", [ z, Z, schwa, SCHWA ] }; // z Z ə Ə
 	key <AD12> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ w, W, dead_breve ] }; // w W ˘
@@ -43,7 +43,7 @@ xkb_symbols "dvorak" {
 	key <AC01> { type[group1] = "FOUR_LEVEL_ALPHABETIC", [ a, A, ae, AE ] }; // a A æ Æ
 	key <AC02> { type[group1] = "FOUR_LEVEL_ALPHABETIC", [ u, U, ugrave, Ugrave ] }; // u U ù Ù
 	key <AC03> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ i, I, dead_diaeresis, dead_abovedot ] }; // i I ¨ ˙
-	key <AC04> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ e, E, EuroSign, UFDD1 ] }; // e E € ¤
+	key <AC04> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ e, E, EuroSign, dead_currency ] }; // e E € ¤
 	key <AC05> { type[group1] = "FOUR_LEVEL", [ comma, semicolon, rightsinglequotemark, dead_horn ] }; // , ; ’ ̛
 	key <AC06> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ c, C, copyright, U017F ] }; // c C © ſ
 	key <AC07> { type[group1] = "FOUR_LEVEL_ALPHABETIC", [ t, T, thorn, THORN ] }; // t T þ Þ
@@ -51,7 +51,7 @@ xkb_symbols "dvorak" {
 	key <AC09> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ r, R, registered, trademark ] }; // r R ® ™
 	key <AC10> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ n, N, dead_tilde ] }; // n N ~
 	key <AC11> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ m, M, dead_macron, masculine ] }; // m M ¯ º
-	key <BKSL> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ ccedilla, Ccedilla, dead_cedilla, UFDD3 ] }; // ç Ç ¸ ,
+	key <BKSL> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ ccedilla, Ccedilla, dead_cedilla, dead_belowcomma ] }; // ç Ç ¸ ,
 
 	key <LSGT> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ ecircumflex, Ecircumflex, slash ] }; // ê Ê /
 	key <AB01> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ agrave, Agrave, backslash ] }; // à À \
@@ -61,7 +61,7 @@ xkb_symbols "dvorak" {
 	key <AB05> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ k, K, asciitilde, U2328 ] }; // k K ~ ⌨
 	key <AB06> { type[group1] = "FOUR_LEVEL", [ apostrophe, question, questiondown, dead_hook ] }; // ' ? ¿ ̉
 	key <AB07> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ q, Q, dead_abovering, dead_belowdot ] }; // q Q ˚ ̣
-	key <AB08> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ g, G, UFDD2 ] }; // g G µ
+	key <AB08> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ g, G, dead_greek ] }; // g G µ
 	key <AB09> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ h, H, dagger, doubledagger ] }; // h H † ‡
 	key <AB10> { type[group1] = "FOUR_LEVEL_SEMIALPHABETIC", [ f, F, dead_ogonek, ordfeminine ] }; // f F ˛ ª
 	key <SPCE> { type[group1] = "FOUR_LEVEL", [ space, nobreakspace, underscore, U202F ] }; //     _  
