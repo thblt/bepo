@@ -980,6 +980,7 @@ sub gen_win_msklc_footer()
                  "02c7\t\"CARON\"\r\n".
                  "002c\t\"COMMA BELOW\"\r\n".
                  "002f\t\"STROKE\"\r\n".
+                 "2015\t\"HORIZONTAL STROKE\"\r\n".
                  "02d8\t\"BREVE\"\r\n".
                  "00a8\t\"DIAERESIS\"\r\n".
                  "02d9\t\"DOT ABOVE\"\r\n".
