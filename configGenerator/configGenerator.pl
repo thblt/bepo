@@ -585,7 +585,7 @@ sub gen_x_compose_body()
                 }
                 else
                 {
-                    print STDERR "Unknown symbol: ".$key."\n";
+                    print STDERR "Unknown symbol: ".$doubledDeadKey."\n";
                     $failed = 1;
                 }
             }
