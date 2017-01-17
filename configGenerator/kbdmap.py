@@ -11,12 +11,16 @@
 # of the License, or (at your option) any later version.
 #
 
-import defaults, sys
-defaults.xkbFile = sys.argv[1]
+import defaults
+import sys
 
-import xkb, dead_keys, codecs, compose
+import xkb
+import dead_keys
+import codecs
+# import compose
 from terminators import terminators
 
+defaults.xkbFile = sys.argv[1]
 
 header = u"""# bepo
 #
@@ -93,69 +97,69 @@ header = u"""# bepo
 # ------------------------------------------------------------------"""
 
 charToCtrl = {
-  "a": "soh",
-  "b": "stx",
-  "c": "etx",
-  "d": "eot",
-  "e": "enq",
-  "f": "ack",
-  "g": "bel",
-  "h": "bs",
-  "i": "ht",
-  "j": "nl",
-  "k": "vt",
-  "l": "np",
-  "m": "cr",
-  "n": "so",
-  "o": "si",
-  "p": "dle",
-  "q": "dc1",
-  "r": "dc2",
-  "s": "dc3",
-  "t": "dc4",
-  "u": "nak",
-  "v": "syn",
-  "w": "etb",
-  "x": "can",
-  "y": "em",
-  "z": "sub",
-  # 27 esc
-  "\\": "fs", 
-  "]": "gs", 
-  "^": "rs", 
-  "_": "us",
-  # 32 sp 
-  # 127 de
+    "a": "soh",
+    "b": "stx",
+    "c": "etx",
+    "d": "eot",
+    "e": "enq",
+    "f": "ack",
+    "g": "bel",
+    "h": "bs",
+    "i": "ht",
+    "j": "nl",
+    "k": "vt",
+    "l": "np",
+    "m": "cr",
+    "n": "so",
+    "o": "si",
+    "p": "dle",
+    "q": "dc1",
+    "r": "dc2",
+    "s": "dc3",
+    "t": "dc4",
+    "u": "nak",
+    "v": "syn",
+    "w": "etb",
+    "x": "can",
+    "y": "em",
+    "z": "sub",
+    # 27 esc
+    "\\": "fs",
+    "]": "gs",
+    "^": "rs",
+    "_": "us",
+    # 32 sp
+    # 127 de
 }
 
 defaultDeads = ["grave", "acute", "circumflex", "tilde", "diaeresis", "cedilla", "ogonek", "caron", "breve", "doubleacute"]
 
 deadNames = {
-  "grave": "dgra",
-  "acute": "dacu",
-  "circumflex": "dcir",
-  "tilde": "dtil",
-  "macron": "dmac",
-  "breve": "dbre",
-  "abovedot": "ddot",
-  "diaeresis": "ddia",
-  "ringabove": "drin",
-  "cedilla": "dced",
-  "doubleacute": "ddac",
-  "ogonek": "dogo",
-  "caron": "dcar",
-  "currency": "dapo",
-  "stroke": "dsla",
-  #"duml",
+    "grave": "dgra",
+    "acute": "dacu",
+    "circumflex": "dcir",
+    "tilde": "dtil",
+    "macron": "dmac",
+    "breve": "dbre",
+    "abovedot": "ddot",
+    "diaeresis": "ddia",
+    "ringabove": "drin",
+    "cedilla": "dced",
+    "doubleacute": "ddac",
+    "ogonek": "dogo",
+    "caron": "dcar",
+    "currency": "dapo",
+    "stroke": "dsla",
+    # "duml",
 }
 
 def chrRepr(s):
-  if len(s) == 1:
-    if ord(s) < 127:
-      return "'%s'" % s
-    else:
-      return str(ord(s))
-  return s
+    if len(s) == 1:
+        if ord(s) < 127:
+            return "'%s'" % s
+        else:
+            return str(ord(s))
+    return s
 
 
 out = file(sys.argv[2], "w")
@@ -164,108 +168,108 @@ print >> out, header
 
 f = file("keys.conf")
 for l in f:
-  if l.startswith("#") or len(l.strip()) == 0:
-    continue
-  k, scanCode  = l.split("\t")[:2]
-  if not xkb.tmplValues.has_key(k):
-    continue
-  
+    if l.startswith("#") or len(l.strip()) == 0:
+        continue
+    k, scanCode = l.split("\t")[:2]
+    if not xkb.tmplValues.has_key(k):
+        continue
+
 #                                                         alt
 # scan                       cntrl          alt    alt   cntrl lock
 # code  base   shift  cntrl  shift  alt    shift  cntrl  shift state
-  s = "  "+str(int(scanCode, 16)).rjust(3, "0")+"   "
-  for m, ctrl in [("", False), ("_shift", False), ("", True), ("_shift", True), ("_option", False), ("_shift_option", False), ("_option", True), ("_shift_option", True)]:
-      v = xkb.tmplValues[k+m]
-    #  v = terminators.get( v, v )
-      if v == "":
-        v = "nop"
-      try:
-       term = "nop"
-       cl = codecs.encode(v, "iso-8859-15")
-      except:
-        cl = "nop"
-      
-    #    if terminators.has_key(v):
-      if deadNames.has_key(v):
-        cl = deadNames[v]
+    s = "  " + str(int(scanCode, 16)).rjust(3, "0") + "   "
+    for m, ctrl in [("", False), ("_shift", False), ("", True), ("_shift", True), ("_option", False), ("_shift_option", False), ("_option", True), ("_shift_option", True)]:
+        v = xkb.tmplValues[k + m]
+      #  v = terminators.get( v, v )
+        if v == "":
+            v = "nop"
         try:
-          term = names[codecs.encode(terminators[v], "iso-8859-15")]
+            term = "nop"
+            cl = codecs.encode(v, "iso-8859-15")
         except:
-          term = "nop"
-      elif terminators.has_key(v):
-        print "unsupported", "dead_"+v
-        term = "nop"
-        try:
-          cl = names[codecs.encode(terminators[v], "iso-8859-15")]
-        except:
-          cl = "nop"
-        
-          
-      if ctrl:
-        if charToCtrl.has_key(cl):
-          cl = charToCtrl[cl]
-        elif charToCtrl.has_key(cl.lower()):
-          cl = charToCtrl[cl.lower()]
-        elif charToCtrl.has_key(term):
-          cl = charToCtrl[term]
-        else:
-          cl = "nop"
-        
-      s += chrRepr(cl).ljust(7)
-    
-  s += " "
-  if "ALPHABETIC" in xkb.options[k]:
-    s += "C"
-  else:
-    s += "O"
+            cl = "nop"
 
-  print >> out, s
+      #    if terminators.has_key(v):
+        if deadNames.has_key(v):
+            cl = deadNames[v]
+            try:
+                term = names[codecs.encode(terminators[v], "iso-8859-15")]
+            except:
+                term = "nop"
+        elif terminators.has_key(v):
+            print "unsupported", "dead_"+v
+            term = "nop"
+            try:
+                cl = names[codecs.encode(terminators[v], "iso-8859-15")]
+            except:
+                cl = "nop"
+
+
+        if ctrl:
+            if charToCtrl.has_key(cl):
+                cl = charToCtrl[cl]
+            elif charToCtrl.has_key(cl.lower()):
+                cl = charToCtrl[cl.lower()]
+            elif charToCtrl.has_key(term):
+                cl = charToCtrl[term]
+            else:
+                cl = "nop"
+
+        s += chrRepr(cl).ljust(7)
+
+    s += " "
+    if "ALPHABETIC" in xkb.options[k]:
+        s += "C"
+    else:
+        s += "O"
+
+    print >> out, s
 
 
 print >> out, """#
 # finally, the dead keys
 # ex:
-#  041   dgra   172	 nop	nop    '|'    '|'    nop    nop     O
+#  041   dgra   172      nop    nop    '|'    '|'    nop    nop     O
 #  dgra  '`'  ( 'a' 224 ) ( 'A' 192 ) ( 'e' 232 ) ( 'E' 200 )
 #             ( 'i' 236 ) ( 'I' 204 ) ( 'o' 242 ) ( 'O' 210 )
 #             ( 'u' 249 ) ( 'U' 217 )"""
-			
+
 # find the dead keys used here
 dks = set()
 for v in xkb.tmplValues.itervalues():
-  if terminators.has_key(v):
-    dks.add(v)
+    if terminators.has_key(v):
+        dks.add(v)
 
 for m in sorted([m for m in dead_keys.dmm if len(m) == 1]):
-  if m[0] not in dks or not deadNames.has_key(m[0]) :
-    continue
-  
-  count = 0
-  s = "  %s %s " % (deadNames[m[0]], chrRepr(codecs.encode(terminators[m[0]], "iso-8859-15", 'replace')))
-  for k, mods in sorted(dead_keys.dc):
-    if mods == m and dead_keys.dc.has_key((k, ())):
-      try:
-        i = chrRepr(codecs.encode(dead_keys.dc[k, ()], "iso-8859-15"))
-        o = chrRepr(codecs.encode(dead_keys.dc[k, mods], "iso-8859-15"))
-        if count != 0 and count % 4 == 0:
-          s += "\n           "
-        s += "( %s %s ) " % (i, o)
-        count += 1
-      except:
-        pass
-    elif m[0] in mods:
-      K = (k, tuple(a for a in mods if a != m[0]))
-      if dead_keys.dc.has_key(K):
-        try:
-          i = chrRepr(codecs.encode(dead_keys.dc[K], "iso-8859-15"))
-          o = chrRepr(codecs.encode(dead_keys.dc[k, mods], "iso-8859-15"))
-          if count != 0 and count % 4 == 0:
-            s += "\n           "
-          s += "( %s %s ) " % (i, o)
-          count += 1
-        except:
-          pass
+    if m[0] not in dks or not deadNames.has_key(m[0]) :
+        continue
 
-  print >> out, s
+    count = 0
+    s = "  %s %s " % (deadNames[m[0]], chrRepr(codecs.encode(terminators[m[0]], "iso-8859-15", 'replace')))
+    for k, mods in sorted(dead_keys.dc):
+        if mods == m and dead_keys.dc.has_key((k, ())):
+            try:
+                i = chrRepr(codecs.encode(dead_keys.dc[k, ()], "iso-8859-15"))
+                o = chrRepr(codecs.encode(dead_keys.dc[k, mods], "iso-8859-15"))
+                if count != 0 and count % 4 == 0:
+                    s += "\n           "
+                s += "( %s %s ) " % (i, o)
+                count += 1
+            except:
+                pass
+        elif m[0] in mods:
+            K = (k, tuple(a for a in mods if a != m[0]))
+            if dead_keys.dc.has_key(K):
+                try:
+                    i = chrRepr(codecs.encode(dead_keys.dc[K], "iso-8859-15"))
+                    o = chrRepr(codecs.encode(dead_keys.dc[k, mods], "iso-8859-15"))
+                    if count != 0 and count % 4 == 0:
+                        s += "\n           "
+                    s += "( %s %s ) " % (i, o)
+                    count += 1
+                except:
+                    pass
+
+    print >> out, s
 #  if count > 0:
 #    print >> out, s
