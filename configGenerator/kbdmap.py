@@ -11,10 +11,14 @@
 # of the License, or (at your option) any later version.
 #
 
-import defaults, sys
+import codecs
+import sys
+
+import defaults
 defaults.xkbFile = sys.argv[1]
 
-import xkb, dead_keys, codecs, compose
+import xkb
+import dead_keys
 from terminators import terminators
 
 
@@ -148,6 +152,7 @@ deadNames = {
     "stroke": "dsla",
     #"duml",
 }
+
 
 def chrRepr(s):
     if len(s) == 1:

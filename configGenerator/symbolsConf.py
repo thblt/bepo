@@ -12,9 +12,13 @@
 #
 
 
+import sys
+
 # import xkb to load the symbols from the current layout
 # import dead_keys to load the dead_keys symbols in compose
-import sys, compose, xkb, dead_keys
+import compose
+import xkb
+import dead_keys
 
 out = open("symbols.conf", "w")
 for C in sorted(compose.composeChars.keys()):

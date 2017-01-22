@@ -12,7 +12,12 @@
 #
 
 
-import re, sys, compose, codecs, defaults
+import re
+import sys
+
+import compose
+import codecs
+import defaults
 from terminators import terminators
 
 str_catchKey = r"^\s*key\s*<([A-Z0-9]{4})>\s*{(.*)\[(.*)\]\s*}\s*;\s*(:?//.*|$)"

@@ -11,10 +11,15 @@
 # of the License, or (at your option) any later version.
 #
 
-import defaults, sys
+import codecs
+import sys
+import unicodedata
+
+import defaults
 defaults.xkbFile = sys.argv[1]
 
-import xkb, dead_keys, codecs, unicodedata
+import xkb
+import dead_keys
 from terminators import terminators, combiningTerminators, spaceTerminators
 
 
