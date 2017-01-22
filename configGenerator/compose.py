@@ -122,17 +122,17 @@ fCompose = open(defaults.composeFile)
 states = set()
 outputs = {}
 
-for l in fCompose:
-    if l.startswith("<Multi_key>") and "<KP_" not in l and "<underbar>" not in l and "<rightcaret>" not in l and "<leftshoe>" not in l and "<leftcaret>" not in l and "<rightshoe>" not in l and "<U223C>" not in l:
-        seq = re.findall('<([^ ]+)>', l.split(":")[0])
-        seq = [upperUnicode(s) for s in seq]
-        if areSupportedChars(seq):
-            for i in range(1, len(seq)):
-                s = tuple(seq[:i])
-                states.add(s)
-            c = l.split(":")[1].split()[1]
-            outputs[tuple(seq)] = char(c)
-        
+# for l in fCompose:
+#     if l.startswith("<Multi_key>") and "<KP_" not in l and "<underbar>" not in l and "<rightcaret>" not in l and "<leftshoe>" not in l and "<leftcaret>" not in l and "<rightshoe>" not in l and "<U223C>" not in l:
+#         seq = re.findall('<([^ ]+)>', l.split(":")[0])
+#         seq = [upperUnicode(s) for s in seq]
+#         if areSupportedChars(seq):
+#             for i in range(1, len(seq)):
+#                 s = tuple(seq[:i])
+#                 states.add(s)
+#             c = l.split(":")[1].split()[1]
+#             outputs[tuple(seq)] = char(c)
+
 #    for k in seq:
 #      if k[0] == 'U' and len(k) == 5 and ishex(k[1:]):
 #        k = unichr(int(k[1:], 16))

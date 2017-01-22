@@ -388,13 +388,13 @@ previous = None
 # special case treated at the end.
 actions = set([' ', ' '])
 
-for c in sorted(list(d.keys()), case_order):
+for c in sorted(list(d.keys())): #, case_order):
     if len(d[c]) != 1 or len(c[0]) == 1:
         if tuple([]) in d[c]:
             if dc[ c, tuple([]) ].lower() != previous:
                 print(file=deadXMLBuf)
             print('    <action id="%s">' % xmlChar(dc[ c, tuple([]) ]), file=deadXMLBuf)
-            for mod in sorted(d[c], mod_order) :
+            for mod in sorted(d[c]): #, mod_order):
                 # print >> deadXMLBuf, '    ', '_'.join([finalModNames[m] for m in mod]), dc[ c, mod ]
                 if len(mod) == 0:
                     fm = 'none'
@@ -473,7 +473,7 @@ for C in sorted( set(list(compose.charActions.keys()) + list(xkb.chars) ) - acti
 print(file=deadXMLBuf)
 print('    <action id=" ">', file=deadXMLBuf)
 print('      <when state="none" output=" "/>', file=deadXMLBuf)
-for m in sorted(dmm, mod_order):
+for m in sorted(dmm): #, mod_order):
     if m != tuple():
         print('      <when state="%s" output="%s"/>' % ('_'.join(m), ''.join([xmlChar(spaceTerminators.get(n, "?")) for n in m])), file=deadXMLBuf)
 if ' ' in compose.charActions:
@@ -491,7 +491,7 @@ print('    </action>', file=deadXMLBuf)
 print(file=deadXMLBuf)
 print('    <action id=" "> <!-- nbsp -->', file=deadXMLBuf)
 print('      <when state="none" output=" "/>', file=deadXMLBuf)
-for m in sorted(dmm, mod_order):
+for m in sorted(dmm): #, mod_order):
     if m != tuple():
         print('      <when state="%s" output="%s"/>' % ('_'.join(m), ''.join([xmlChar(combiningTerminators.get(n, "?")) for n in m])), file=deadXMLBuf)
 if ' ' in compose.charActions:
@@ -510,7 +510,7 @@ modStates = {}
 for m in dm:
     modStates[m] = [('none', m)]
 
-for m in sorted(dmm, mod_order):
+for m in sorted(dmm): #, mod_order):
     if len(m) == 2:
         m1, m2 = m
         modStates[m1].append((m2, '%s_%s' % (m1, m2)))
@@ -522,7 +522,7 @@ for m in sorted(modStates.keys()):
     l = modStates[m]
     print('    <action id="%s">' % m, file=deadXMLBuf)
     print('      <when state="%s" output="%s"/>' % (m, xmlChar(terminators.get(m, "?"))), file=deadXMLBuf)
-    for s, n in sorted(l, mod_order2):
+    for s, n in sorted(l): #, mod_order2):
         print('      <when state="%s" next="%s"/>' % (s, n), file=deadXMLBuf)
         
     if m in compose.charActions:
@@ -555,7 +555,7 @@ def termChar(s):
 print(file=deadXMLBuf)
 print(file=deadXMLBuf)
 print('  <terminators>', file=deadXMLBuf)
-for m in sorted(dmm, mod_order):
+for m in sorted(dmm): #, mod_order):
     if m != tuple():
         print('    <when state="%s" output="%s"/>' % ('_'.join(m), ''.join([xmlChar(terminators.get(n, "?")) for n in m])), file=deadXMLBuf)
 for ss in sorted(compose.states):
