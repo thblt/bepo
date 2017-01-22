@@ -12,7 +12,10 @@
 #
 
 
-import unicodedata, re, sys, defaults
+import re
+
+import defaults
+
 
 def ishex(s):
     for c in s:

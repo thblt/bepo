@@ -12,10 +12,15 @@
 #
 
 
-import dead_keys, compose, sys, defaults, re
+import sys
+import re
+
+import defaults
 
 defaults.xkbFile = sys.argv[1]
 
+import compose
+import dead_keys
 import xkb
 from terminators import terminators, combiningTerminators, spaceTerminators
 

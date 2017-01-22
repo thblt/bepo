@@ -11,10 +11,14 @@
 # of the License, or (at your option) any later version.
 #
 
-import defaults, sys
+import sys
+
+import defaults
 defaults.xkbFile = sys.argv[1]
 
-import xkb, dead_keys, codecs
+import xkb
+import dead_keys
+import codecs
 from terminators import terminators
 
 # keycode 2 = ampersand 1 
