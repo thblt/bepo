@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Produit une carte de touches à partir d'un fichier xkb
@@ -18,7 +18,7 @@ import xkb, dead_keys, codecs
 from terminators import terminators
 
 
-fullMapTmpl = keyboardTemplate = u"""# -*- coding: utf-8; -*-
+fullMapTmpl = keyboardTemplate = """# -*- coding: utf-8; -*-
 ####################################################
 #    KTouch
 #    Fichier de définition de clavier
@@ -252,11 +252,11 @@ HiddenKey	%(AB10_code)s	%(AB10_option_code)s	%(AC10_code)s	264	#%(AB10_option)s
 """
 
 fullMapValues = {}
-for k, v in xkb.tmplValues.iteritems():
-   v = terminators.get( v, v )
-   if v == "":
-     v = " "
-   fullMapValues[k] = v
-   fullMapValues[k+"_code"] = str(ord(v))
+for k, v in xkb.tmplValues.items():
+      v = terminators.get( v, v )
+      if v == "":
+          v = " "
+      fullMapValues[k] = v
+      fullMapValues[k+"_code"] = str(ord(v))
 out = codecs.open(sys.argv[2], "w", "utf8")
 out.write( fullMapTmpl % fullMapValues )

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Génération de touches mortes pour mac os 
@@ -16,13 +16,13 @@
 # import dead_keys to load the dead_keys symbols in compose
 import sys, compose, xkb, dead_keys
 
-out = file("symbols.conf", "w")
+out = open("symbols.conf", "w")
 for C in sorted(compose.composeChars.keys()):
-  code = compose.composeChars[C]
-  ucode = repr(C)[2:-1]
-  if ucode.startswith(r'\u'):
-    ucode = ucode[2:].rjust(4, '0')
-    Ucode = ucode.upper()
-    v  = (code, Ucode, code, code, ucode)
-    s = "\t".join(v) + "\n"
-    out.write(s)
+    code = compose.composeChars[C]
+    ucode = repr(C)[2:-1]
+    if ucode.startswith(r'\u'):
+        ucode = ucode[2:].rjust(4, '0')
+        Ucode = ucode.upper()
+        v  = (code, Ucode, code, code, ucode)
+        s = "\t".join(v) + "\n"
+        out.write(s)

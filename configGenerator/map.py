@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Produit une carte de touches à partir d'un fichier xkb
@@ -18,7 +18,7 @@ import xkb, dead_keys, codecs, unicodedata
 from terminators import terminators, combiningTerminators, spaceTerminators
 
 
-fullMapTmpl = keyboardTemplate = u"""
+fullMapTmpl = keyboardTemplate = """
   ┌────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────┬────╔═════════╗
   │ %(TLDE_shift)s %(TLDE_shift_option)s│ %(AE01_shift)s %(AE01_shift_option)s│ %(AE02_shift)s %(AE02_shift_option)s│ %(AE03_shift)s %(AE03_shift_option)s│ %(AE04_shift)s %(AE04_shift_option)s│ %(AE05_shift)s %(AE05_shift_option)s│ %(AE06_shift)s %(AE06_shift_option)s│ %(AE07_shift)s %(AE07_shift_option)s│ %(AE08_shift)s %(AE08_shift_option)s│ %(AE09_shift)s %(AE09_shift_option)s│ %(AE10_shift)s %(AE10_shift_option)s│ %(AE11_shift)s %(AE11_shift_option)s│ %(AE12_shift)s %(AE12_shift_option)s║         ║
   │ %(TLDE)s %(TLDE_option)s│ %(AE01)s %(AE01_option)s│ %(AE02)s %(AE02_option)s│ %(AE03)s %(AE03_option)s│ %(AE04)s %(AE04_option)s│ %(AE05)s %(AE05_option)s│ %(AE06)s %(AE06_option)s│ %(AE07)s %(AE07_option)s│ %(AE08)s %(AE08_option)s│ %(AE09)s %(AE09_option)s│ %(AE10)s %(AE10_option)s│ %(AE11)s %(AE11_option)s│ %(AE12)s %(AE12_option)s║ <--     ║
@@ -37,118 +37,118 @@ fullMapTmpl = keyboardTemplate = u"""
   ╚═══════╩══════╩═════╩═══════════════════════════╩═════╩══════╩═════╩══════╝
 """
 
-mainChars = u"$\"«»()_+-/*=%^,.'#1234567890@BÉPOÈ!VDLJZWAUIE?CTSRNMÇÊÀYH:K;QGXF—<>[]|&`¨€~\{}…ÆŒÙ°"
+mainChars = "$\"«»()_+-/*=%^,.'#1234567890@BÉPOÈ!VDLJZWAUIE?CTSRNMÇÊÀYH:K;QGXF—<>[]|&`¨€~\{}…ÆŒÙ°"
 
 available = set()
 
 out = codecs.open(sys.argv[2], "w", "utf8")
-print >> out, u"* Complète"
+print("* Complète", file=out)
 fullMapValues = {}
-for k, v in xkb.tmplValues.iteritems():
-   v = terminators.get( v, v )
-   if v == "":
-     v = " "
-   fullMapValues[k] = v
-   available.add(v)
+for k, v in xkb.tmplValues.items():
+        v = terminators.get( v, v )
+        if v == "":
+                v = " "
+        fullMapValues[k] = v
+        available.add(v)
 out.write( fullMapTmpl % fullMapValues )
 
-print >> out 
-print >> out 
-print >> out, u"* Simplifiée"
+print(file=out) 
+print(file=out) 
+print("* Simplifiée", file=out)
 fullMapValues = {}
-for k, v in xkb.tmplValues.iteritems():
-   v = terminators.get( v, v )
-   if v == "":
-     v = " "
-   if ("_option" not in k and v in mainChars) or ("_option" in k and v in mainChars.lower()) or ("_shift" in k and k.count("_") == 1) or (k.count("_") == 0 and xkb.tmplValues[k+"_shift"] != v.upper()):
-     fullMapValues[k] = v
-   else:
-     fullMapValues[k] = u" "
+for k, v in xkb.tmplValues.items():
+        v = terminators.get( v, v )
+        if v == "":
+                v = " "
+        if ("_option" not in k and v in mainChars) or ("_option" in k and v in mainChars.lower()) or ("_shift" in k and k.count("_") == 1) or (k.count("_") == 0 and xkb.tmplValues[k+"_shift"] != v.upper()):
+                fullMapValues[k] = v
+        else:
+                fullMapValues[k] = " "
 out.write( fullMapTmpl % fullMapValues )
 
-print >> out 
-print >> out 
-print >> out, "* Capslock"
+print(file=out) 
+print(file=out) 
+print("* Capslock", file=out)
 fullMapValues = {}
-for k, v in xkb.tmplValues.iteritems():
-   v = terminators.get( v, v )
-   if v == "":
-     v = " "
-   if "_capslock" in k:
-     k = k.replace("_capslock", "")
-     fullMapValues[k] = v
-     available.add(v)
+for k, v in xkb.tmplValues.items():
+        v = terminators.get( v, v )
+        if v == "":
+                v = " "
+        if "_capslock" in k:
+                k = k.replace("_capslock", "")
+                fullMapValues[k] = v
+                available.add(v)
 out.write( fullMapTmpl % fullMapValues )
 
 # find the dead keys used here
 dks = set()
-for v in xkb.tmplValues.itervalues():
-  if terminators.has_key(v):
-    dks.add(v)
-    available.add(terminators[v])
-    available.add(combiningTerminators[v])
+for v in xkb.tmplValues.values():
+        if v in terminators:
+                dks.add(v)
+                available.add(terminators[v])
+                available.add(combiningTerminators[v])
 
 for m in sorted(dks):
-  deadName = "dead_" + m.replace("ringabove", "abovering")
-  fullMapValues = {}
-  for k in xkb.tmplValues.iterkeys():
-    fullMapValues[k] = u' '
-  print >> out
-  print >> out
-  print >> out, "* %s" % deadName
-  for k, mods in sorted(dead_keys.dc):
-    if mods == (m,) and dead_keys.dc.has_key((k, ())):
-      k2 = dead_keys.dc[k, ()]
-      v2 = dead_keys.dc[k, mods]
-      for k3, v3 in xkb.tmplValues.iteritems():
-        if v3 == k2:
-          fullMapValues[k3] = v2      
-          available.add(v2)
-    elif m in mods:
-      K = (k, tuple(a for a in mods if a != m))
-      if dead_keys.dc.has_key(K):
-        k2 = dead_keys.dc[K]
-        v2 = dead_keys.dc[k, mods]
-        for k3, v3 in xkb.tmplValues.iteritems():
-          if v3 == k2:
-            fullMapValues[k3] = v2      
-            available.add(v2)
-  for k, v in xkb.tmplValues.iteritems():
-    if "_capslock" not in k and "_command" not in k:
-      if v == u" ":
-        fullMapValues[k] = spaceTerminators[m]
-      elif v == m:
-        fullMapValues[k] = terminators[m]
-      elif v == u" ":
-        fullMapValues[k] = combiningTerminators[m]
-  out.write( fullMapTmpl % fullMapValues )
+        deadName = "dead_" + m.replace("ringabove", "abovering")
+        fullMapValues = {}
+        for k in xkb.tmplValues.keys():
+                fullMapValues[k] = ' '
+        print(file=out)
+        print(file=out)
+        print("* %s" % deadName, file=out)
+        for k, mods in sorted(dead_keys.dc):
+                if mods == (m,) and (k, ()) in dead_keys.dc:
+                        k2 = dead_keys.dc[k, ()]
+                        v2 = dead_keys.dc[k, mods]
+                        for k3, v3 in xkb.tmplValues.items():
+                                if v3 == k2:
+                                        fullMapValues[k3] = v2      
+                                        available.add(v2)
+                elif m in mods:
+                        K = (k, tuple(a for a in mods if a != m))
+                        if K in dead_keys.dc:
+                                k2 = dead_keys.dc[K]
+                                v2 = dead_keys.dc[k, mods]
+                                for k3, v3 in xkb.tmplValues.items():
+                                        if v3 == k2:
+                                                fullMapValues[k3] = v2      
+                                                available.add(v2)
+        for k, v in xkb.tmplValues.items():
+                if "_capslock" not in k and "_command" not in k:
+                        if v == " ":
+                                fullMapValues[k] = spaceTerminators[m]
+                        elif v == m:
+                                fullMapValues[k] = terminators[m]
+                        elif v == " ":
+                                fullMapValues[k] = combiningTerminators[m]
+        out.write( fullMapTmpl % fullMapValues )
 
 for i, m1 in enumerate(sorted(dks)):
-  for m2 in sorted(dks)[i+1:]:
-    fullMapValues = {}
-    for k in xkb.tmplValues.iterkeys():
-      fullMapValues[k] = u' '
-    display = False
-    for k, mods in sorted(dead_keys.dc):
-      if mods == (m1, m2) and dead_keys.dc.has_key((k, ())):
-        k2 = dead_keys.dc[k, ()]
-        v2 = dead_keys.dc[k, mods]
-        for k3, v3 in xkb.tmplValues.iteritems():
-          if v3 == k2:
-            fullMapValues[k3] = v2      
-            available.add(v2)
-            display = True
-    if display:
-      print >> out
-      print >> out
-      print >> out, "* %s" % " & ".join("dead_" + m.replace("ringabove", "abovering") for m in (m1, m2))
-      out.write( fullMapTmpl % fullMapValues )
+        for m2 in sorted(dks)[i+1:]:
+                fullMapValues = {}
+                for k in xkb.tmplValues.keys():
+                        fullMapValues[k] = ' '
+                display = False
+                for k, mods in sorted(dead_keys.dc):
+                        if mods == (m1, m2) and (k, ()) in dead_keys.dc:
+                                k2 = dead_keys.dc[k, ()]
+                                v2 = dead_keys.dc[k, mods]
+                                for k3, v3 in xkb.tmplValues.items():
+                                        if v3 == k2:
+                                                fullMapValues[k3] = v2      
+                                                available.add(v2)
+                                                display = True
+                if display:
+                        print(file=out)
+                        print(file=out)
+                        print("* %s" % " & ".join("dead_" + m.replace("ringabove", "abovering") for m in (m1, m2)), file=out)
+                        out.write( fullMapTmpl % fullMapValues )
 
-print >> out
-print >> out
-print >> out, u" * Caractères disponibles"
-print >> out
-print >> out, len(available), u"caractères."
-print >> out
+print(file=out)
+print(file=out)
+print(" * Caractères disponibles", file=out)
+print(file=out)
+print(len(available), "caractères.", file=out)
+print(file=out)
 for c in sorted(available):
-  print >> out, u"%s\t%s" % ( c, unicodedata.name(unicode(c), "pas dans unicode "+unicodedata.unidata_version) )
+        print("%s\t%s" % ( c, unicodedata.name(str(c), "pas dans unicode "+unicodedata.unidata_version) ), file=out)
