@@ -128,7 +128,7 @@ for l in f:
                     cl = codecs.encode(terminators[v], "iso-8859-15")
                 except:
                     cl = "nop"
-            s += prefix+" "+escape(cl)+" "
+            s += "%s %s " % (prefix.encode('iso-8859-15'), escape(cl))
         else:
             # this is the control modifier. We have to choose a single control char to send which correspond
             # to one of the 4 characters on the key.
@@ -140,7 +140,7 @@ for l in f:
                     if cc != "nop" and cc != charToCtrl[cv]:
                         print("ctrl already found for", k, cc, "- using", charToCtrl[cv], "instead.")
                     cc = charToCtrl[cv]
-            s += prefix+" "+escape(cc)+" "
+            s += "%s %s " % (prefix.encode('iso-8859-15'), escape(cc))
       
     print(s, file=out)
 
