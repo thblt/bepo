@@ -13,7 +13,7 @@
 
 
 import re
-import sys
+# import sys
 
 import compose
 import codecs
@@ -39,13 +39,13 @@ for l in f:
         chars = re.split(r', *', charsGroup)
         chars = [c.strip() for c in chars]
         chars = [compose.char(c) for c in chars]
-        chars = chars + ['']*(4-len(chars))
-        
+        chars = chars + [''] * (4 - len(chars))
+
         normal[key], shift[key], altgr[key], altgrshift[key] = chars
         options[key] = res.group(2)
 #    print key, chars
 # print altgr["AD09"]
-# sys.exit()
+# sys.exit()
 
 tmplValues = {}
 chars = set()
@@ -57,52 +57,51 @@ for k, v in normal.items():
     if "FOUR_LEVEL_SEMIALPHABETIC" not in options[k]:
         if len(v) == 1:
             V = v.upper()
-    else:
-        V = shift[k]
-    tmplValues[k+'_capslock'] = V
+        else:
+            V = shift[k]
+    tmplValues[k + '_capslock'] = V
     chars.add(V)
 
 for k, v in shift.items():
-    tmplValues[k+'_shift'] = v
+    tmplValues[k + '_shift'] = v
     chars.add(v)
-    
+
     V = v
     if "FOUR_LEVEL_SEMIALPHABETIC" not in options[k]:
         if len(v) == 1:
             V = v.lower()
     else:
         V = normal[k]
-    tmplValues[k+'_shift_capslock'] = V
+    tmplValues[k + '_shift_capslock'] = V
     chars.add(V)
 
 for k, v in altgr.items():
-    tmplValues[k+'_option'] = v
+    tmplValues[k + '_option'] = v
     chars.add(v)
 
     V = v
     if len(v) == 1:
         V = v.upper()
-    tmplValues[k+'_option_capslock'] = V
+    tmplValues[k + '_option_capslock'] = V
     chars.add(V)
 
-    V = terminators.get( v, v )
-    tmplValues[k+'_option_command'] = V
+    V = terminators.get(v, v)
+    tmplValues[k + '_option_command'] = V
     chars.add(V)
 
 
 for k, v in altgrshift.items():
-    tmplValues[k+'_shift_option'] = v
+    tmplValues[k + '_shift_option'] = v
     chars.add(v)
 
     V = v
     if len(v) == 1:
         V = v.lower()
-    tmplValues[k+'_shift_option_capslock'] = V
+    tmplValues[k + '_shift_option_capslock'] = V
     chars.add(V)
-  
+
 if '' in chars:
     chars.remove('')
-actions = set( [compose.name(c) for c in chars if c] )
+actions = set([compose.name(c) for c in chars if c])
 
 tmpl = codecs.open("bepo.tmpl", encoding='utf8').read()
-
