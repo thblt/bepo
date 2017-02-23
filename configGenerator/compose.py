@@ -22,7 +22,8 @@ def ishex(s):
         if c not in "0123456789abcdefABCDEF":
             return False
     return True
-    
+
+
 fKeysymdef = open(defaults.keysymdefFile)
 
 regexp = re.compile(r'#define XK_([^ ]+).*U\+([0-9A-Fa-f]+)')
@@ -35,12 +36,12 @@ for l in fKeysymdef:
         name = res.group(1)
         c = res.group(2)
         try:
-            C = chr( int(c, 16) )
+            C = chr(int(c, 16))
             composeNames[name] = C
         except:
             print(l)
             pass
-            
+
 # some missing chars
 composeNames["combining_acute"] = "́"
 composeNames["combining_belowdot"] = "̣"
@@ -96,6 +97,7 @@ def char(k):
         composeChars[C] = k
     return composeNames[k]
 
+
 def name(c):
     if c in composeChars:
         return composeChars[c]
@@ -104,29 +106,34 @@ def name(c):
     composeChars[c] = k
     return k
 
+
 def isSupportedChar(k):
     if k[0] == 'U' and len(k) == 5 and ishex(k[1:]):
         return True
     return k in composeNames
-    
+
+
 def areSupportedChars(ks):
     for k in ks:
         if not isSupportedChar(k):
             return False
     return True
 
+
 def upperUnicode(k):
     if k[0] == 'U' and 5 <= len(k) <= 6 and ishex(k[1:]):
         return k.upper()
     return k
-    
+
+
 fCompose = open(defaults.composeFile)
 
 states = set()
 outputs = {}
 
 # for l in fCompose:
-#     if l.startswith("<Multi_key>") and "<KP_" not in l and "<underbar>" not in l and "<rightcaret>" not in l and "<leftshoe>" not in l and "<leftcaret>" not in l and "<rightshoe>" not in l and "<U223C>" not in l:
+#     if l.startswith("<Multi_key>") and "<KP_" not in l and "<underbar>" not in l and "<rightcaret>" not in l \
+#         and "<leftshoe>" not in l and "<leftcaret>" not in l and "<rightshoe>" not in l and "<U223C>" not in l:
 #         seq = re.findall('<([^ ]+)>', l.split(":")[0])
 #         seq = [upperUnicode(s) for s in seq]
 #         if areSupportedChars(seq):
@@ -162,14 +169,14 @@ charActions = {}
 for a in set(list(statesByAction.keys()) + list(outputsByAction.keys())):
     # Check there are no items have different name but same unicode point
     # For instance, we once had both includedin and U2282 in the Compose file
-    if char(a) in charActions :
+    if char(a) in charActions:
         print((a, char(a), charActions[char(a)]))
     charActions[char(a)] = a
 # print charActions[u'(']
 # sys.exit()
 
 if __name__ == "__main__":
-    for a in sorted(set(list(statesByAction.keys()) + list(outputsByAction.keys())) ):
+    for a in sorted(set(list(statesByAction.keys()) + list(outputsByAction.keys()))):
         C = char(a)
         if C:
             print('    <action id="%s">' % C)
@@ -181,7 +188,6 @@ if __name__ == "__main__":
                     print('      <when state="%s" output="%s"/>' % ('_'.join(s), c))
             print('    </action>')
 
-            
     print('''
         <action id="Multikey">
             <when state="none" next="Multikey"/>
@@ -194,5 +200,3 @@ if __name__ == "__main__":
         s = '_'.join(list(ss))
         print('    <when state="%s" output="%s"/>' % (s, C))
     print("  </terminators>")
-    
-    
