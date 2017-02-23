@@ -3,7 +3,7 @@
 #
 # Produit une carte de touches à partir d'un fichier xkb
 #
-# Copyright (C) 2017 Gaëtan Lehmann <gaetan.lehmann@jouy.com>
+# Copyright (C) 2017 Gaëtan Lehmann <gaetan.lehmann@gmail.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
