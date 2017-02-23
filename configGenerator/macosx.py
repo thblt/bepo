@@ -15,14 +15,13 @@ import codecs
 import sys
 
 import defaults
+defaults.xkbFile = sys.argv[1]
 
 import xkb
 import dead_keys
 
-defaults.xkbFile = sys.argv[1]
-
 xkb.tmplValues["actionsAndTerminators"] = dead_keys.deadXMLCode
-for k, v in xkb.tmplValues.items():
+for k,v in xkb.tmplValues.items():
     xkb.tmplValues[k] = dead_keys.xmlChar(v)
 out = codecs.open(sys.argv[2], "w", "utf8")
-out.write(xkb.tmpl % xkb.tmplValues)
+out.write( xkb.tmpl % xkb.tmplValues )

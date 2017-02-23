@@ -16,11 +16,10 @@ import sys
 import unicodedata
 
 import defaults
+defaults.xkbFile = sys.argv[1]
 
 import xkb
 import dead_keys
-defaults.xkbFile = sys.argv[1]
-
 from terminators import terminators, combiningTerminators, spaceTerminators
 
 

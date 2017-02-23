@@ -14,13 +14,13 @@
 import sys
 
 import defaults
+defaults.xkbFile = sys.argv[1]
 
 import xkb
-# import dead_keys
+import dead_keys
 import codecs
 from terminators import terminators
 
-defaults.xkbFile = sys.argv[1]
 
 fullMapTmpl = keyboardTemplate = """<?xml version="1.0"?>
 <layout version="1.0" horizgap="0.0714" vertgap="0.0714" ltr="true">
@@ -341,7 +341,7 @@ fullMapTmpl = keyboardTemplate = """<?xml version="1.0"?>
             <value when="normal" draw="false"> </value>
         </key>
         <key shape="rect" type="altgr" homekey="false" size="2.0714;1">
-        </key>
+        </key>  
         <key shape="rect" type="control" homekey="false" size="2.0714;1">
         </key>
     </row>
@@ -350,14 +350,14 @@ fullMapTmpl = keyboardTemplate = """<?xml version="1.0"?>
 
 fullMapValues = {}
 for k, v in xkb.tmplValues.items():
-    v = terminators.get(v, v)
-    if v == '"':
-        v = "&#x0022;"
-    elif v == '<':
-        v = "&#x003c;"
-    elif v == '&':
-        v = '&#x0026;'
-    fullMapValues[k] = v
+      v = terminators.get( v, v )
+      if v == '"':
+          v = "&#x0022;"
+      elif v == '<':
+          v = "&#x003c;"
+      elif v == '&':
+          v = '&#x0026;'
+      fullMapValues[k] = v
 out = codecs.open(sys.argv[2], "w", "utf-16-le")
 out.write("\uFEFF")
-out.write(fullMapTmpl % fullMapValues)
+out.write( fullMapTmpl % fullMapValues )
