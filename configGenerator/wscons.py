@@ -21,7 +21,7 @@ import dead_keys
 import codecs
 from terminators import terminators
 
-# keycode 2 = ampersand 1 
+# keycode 2 = ampersand 1
 # keycode 3 = eacute 2 asciitilde
 # keycode 4 = quotedbl 3 numbersign
 # keycode 5 = apostrophe 4 braceleft
@@ -362,7 +362,7 @@ for i in range(256):
 names = {}
 for c, n in namesData.items():
     names[chr(c)] = n
-#print names
+# print names
 
 out = open(sys.argv[2], "w")
 
@@ -372,24 +372,23 @@ f = open("keys.conf")
 for l in f:
     if l.startswith("#") or len(l.strip()) == 0:
         continue
-    k, scanCode  = l.split("\t")[:2]
+    k, scanCode = l.split("\t")[:2]
     if k not in xkb.tmplValues:
         continue
 
     s = "keycode %s =" % str(int(scanCode, 16))
     for m in ["", "_shift", "_option", "_shift_option"]:
             v = xkb.tmplValues[k+m]
-        #  v = terminators.get( v, v )
+            # v = terminators.get( v, v )
             try:
-              cl = codecs.encode(v, "iso-8859-15")
-              name = names[cl]
+                cl = codecs.encode(v, "iso-8859-15")
+                name = names[cl]
             except:
-        #    if terminators.has_key(v):
+                # if terminators.has_key(v):
                 if v in defaultDeads:
                     name = "dead_" + v.replace("ringabove", "abovering")
                 else:
                     name = "voidSymbol"
             s += " "+name
-            
-    print(s, file=out)
 
+    print(s, file=out)

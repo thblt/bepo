@@ -124,15 +124,16 @@ charToCtrl = {
     "y": "em",
     "z": "sub",
     # 27 esc
-    "\\": "fs", 
-    "]": "gs", 
-    "^": "rs", 
+    "\\": "fs",
+    "]": "gs",
+    "^": "rs",
     "_": "us",
-    # 32 sp 
+    # 32 sp
     # 127 de
 }
 
-defaultDeads = ["grave", "acute", "circumflex", "tilde", "diaeresis", "cedilla", "ogonek", "caron", "breve", "doubleacute"]
+defaultDeads = ["grave", "acute", "circumflex", "tilde", "diaeresis", "cedilla", "ogonek", "caron", "breve",
+                "doubleacute"]
 
 deadNames = {
     "grave": "dgra",
@@ -150,7 +151,7 @@ deadNames = {
     "caron": "dcar",
     "currency": "dapo",
     "stroke": "dsla",
-    #"duml",
+    # "duml",
 }
 
 
@@ -171,25 +172,26 @@ f = open("keys.conf")
 for l in f:
     if l.startswith("#") or len(l.strip()) == 0:
         continue
-    k, scanCode  = l.split("\t")[:2]
+    k, scanCode = l.split("\t")[:2]
     if k not in xkb.tmplValues:
         continue
-    
+
 #                                                         alt
 # scan                       cntrl          alt    alt   cntrl lock
 # code  base   shift  cntrl  shift  alt    shift  cntrl  shift state
-    s = "  "+str(int(scanCode, 16)).rjust(3, "0")+"   "
-    for m, ctrl in [("", False), ("_shift", False), ("", True), ("_shift", True), ("_option", False), ("_shift_option", False), ("_option", True), ("_shift_option", True)]:
+    s = "  " + str(int(scanCode, 16)).rjust(3, "0") + "   "
+    for m, ctrl in [("", False), ("_shift", False), ("", True), ("_shift", True), ("_option", False),
+                    ("_shift_option", False), ("_option", True), ("_shift_option", True)]:
             v = xkb.tmplValues[k+m]
         #  v = terminators.get( v, v )
             if v == "":
                 v = "nop"
             try:
-              term = "nop"
-              cl = codecs.encode(v, "iso-8859-15")
+                term = "nop"
+                cl = codecs.encode(v, "iso-8859-15")
             except:
                 cl = "nop"
-            
+
         #    if terminators.has_key(v):
             if v in deadNames:
                 cl = deadNames[v]
@@ -204,8 +206,7 @@ for l in f:
                     cl = names[codecs.encode(terminators[v], "iso-8859-15")]
                 except:
                     cl = "nop"
-                
-                    
+
             if ctrl:
                 if cl in charToCtrl:
                     cl = charToCtrl[cl]
@@ -215,9 +216,9 @@ for l in f:
                     cl = charToCtrl[term]
                 else:
                     cl = "nop"
-                
+
             s += chrRepr(cl).ljust(7)
-        
+
     s += " "
     if "ALPHABETIC" in xkb.options[k]:
         s += "C"
@@ -234,7 +235,7 @@ print("""#
 #  dgra  '`'  ( 'a' 224 ) ( 'A' 192 ) ( 'e' 232 ) ( 'E' 200 )
 #             ( 'i' 236 ) ( 'I' 204 ) ( 'o' 242 ) ( 'O' 210 )
 #             ( 'u' 249 ) ( 'U' 217 )""", file=out)
-      
+
 # find the dead keys used here
 dks = set()
 for v in xkb.tmplValues.values():
@@ -242,9 +243,9 @@ for v in xkb.tmplValues.values():
         dks.add(v)
 
 for m in sorted([m for m in dead_keys.dmm if len(m) == 1]):
-    if m[0] not in dks or m[0] not in deadNames :
+    if m[0] not in dks or m[0] not in deadNames:
         continue
-    
+
     count = 0
     s = "  %s %s " % (deadNames[m[0]], chrRepr(codecs.encode(terminators[m[0]], "iso-8859-15", 'replace')))
     for k, mods in sorted(dead_keys.dc):

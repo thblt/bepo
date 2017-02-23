@@ -34,9 +34,9 @@ fullMapTmpl = keyboardTemplate = """%(TLDE)s%(AE01)s%(AE02)s%(AE03)s%(AE04)s%(AE
 
 fullMapValues = {}
 for k, v in xkb.tmplValues.items():
-      v = terminators.get( v, v )
-      if v == "":
-          v = " "
-      fullMapValues[k] = v
+    v = terminators.get(v, v)
+    if v == "":
+        v = " "
+    fullMapValues[k] = v
 out = codecs.open(sys.argv[2], "w", "utf8")
-out.write( fullMapTmpl % fullMapValues )
+out.write(fullMapTmpl % fullMapValues)

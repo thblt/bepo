@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Génération de touches mortes pour mac os 
+# Génération de touches mortes pour mac os
 #
 # Copyright (C) 2008 Gaëtan Lehmann <gaetan.lehmann@jouy.inra.fr>
 #
@@ -14,6 +14,7 @@
 
 import re
 import unicodedata
+from io import StringIO
 
 import compose
 import xkb
@@ -26,8 +27,10 @@ finalModNamesExceptions = {
     'DOT BELOW': 'belowdot',
 }
 
+
 def finalModName(n):
-    return finalModNamesExceptions.get(n,n).replace(" ", "").replace("-", "").lower()
+    return finalModNamesExceptions.get(n, n).replace(" ", "").replace("-", "").lower()
+
 
 currency = {
     'LATIN CAPITAL LETTER A WITH CURRENCY': '₳',
@@ -233,21 +236,24 @@ hook = {
 from terminators import terminators, combiningTerminators, spaceTerminators
 
 
-# 'STRIKETHROUGH', 
-# 'SMALL LETTER J':, 
-# 'SMALL LETTER Z', 
+# 'STRIKETHROUGH',
+# 'SMALL LETTER J':,
+# 'SMALL LETTER Z',
 
-def case_order(a,b):
+
+def case_order(a, b):
     if a[0] != b[0]:
         return cmp(a, b)
     return cmp(b[1], a[1])
-    
-def mod_order(a,b):
+
+
+def mod_order(a, b):
     if len(a) == len(b):
-        return cmp(a,b)
+        return cmp(a, b)
     return cmp(len(a), len(b))
 
-def mod_order2(a,b):
+
+def mod_order2(a, b):
     if a[0] == b[0]:
         return 0
     if a[0] == 'none':
@@ -255,13 +261,13 @@ def mod_order2(a,b):
     if b[0] == 'none':
         return 1
     return cmp(a, b)
-    
-    
+
+
 # create the unicode dict, with extended chars for the dead keys
 # key: the unicode name (str)
 # value: the unicode char (unicode)
 unicode_dict = {}
-for c in range(0,0x10000):
+for c in range(0, 0x10000):
     C = chr(c)
     try:
         name = unicodedata.name(C)
@@ -312,7 +318,7 @@ for name, C in unicode_dict.items():
     modifiers = ms.split(' AND ')
     # some chars have a WITH to describe something which is not a modifier
     for m in ['SMALL LETTER J', 'SMALL LETTER Z', 'STRIKETHROUGH']:
-        if m in modifiers :
+        if m in modifiers:
             n = n + ' WITH ' + m
             modifiers.remove(m)
     # translate the dotless modifier to dot above.
@@ -321,15 +327,15 @@ for name, C in unicode_dict.items():
         modifiers.append('DOT ABOVE')
     # translate the middle dot modifier to dot above
     if 'MIDDLE DOT' in modifiers:
-        del modifiers[ modifiers.index('MIDDLE DOT') ]
+        del modifiers[modifiers.index('MIDDLE DOT')]
         modifiers.append('DOT ABOVE')
     # translate hook above to hook
     if 'HOOK ABOVE' in modifiers:
-        del modifiers[ modifiers.index('HOOK ABOVE') ]
+        del modifiers[modifiers.index('HOOK ABOVE')]
         modifiers.append('HOOK')
     # translate left hook to hook
     if 'LEFT HOOK' in modifiers:
-        del modifiers[ modifiers.index('LEFT HOOK') ]
+        del modifiers[modifiers.index('LEFT HOOK')]
         modifiers.append('HOOK')
     # remove empty string in the modifier, to generate an empty tuple
     if '' in modifiers:
@@ -346,23 +352,24 @@ for name, C in unicode_dict.items():
     # and store the modifier set
     dmm.add(modifiers)
 
-    m = chrRegExp.match( n )
+    m = chrRegExp.match(n)
     if m:
-#    print m.group(1), m.group(2), m.group(3)
+        # print m.group(1), m.group(2), m.group(3)
         case = m.group(1)
         letter = m.group(2)
 
         key = (letter, case)
-        modSet = d.get( key , set([]) )
+        modSet = d.get(key, set([]))
         if modifiers in modSet:
-            # print >> sys.stderr, name, "est déjà défini." #, dc[ (key, modifiers) ], C, max( dc[ (key, modifiers) ], C )
+            # print >> sys.stderr, name, "est déjà défini."
+            # #, dc[ (key, modifiers) ], C, max( dc[ (key, modifiers) ], C )
             if C in "ỷƴỶƳ":
-                dc[ (key, modifiers) ] = max( dc[ (key, modifiers) ], C )
+                dc[(key, modifiers)] = max(dc[(key, modifiers)], C)
             else:
-                dc[ (key, modifiers) ] = min( dc[ (key, modifiers) ], C )
-        else :
-            dc[ (key, modifiers) ] = C
-        modSet.add( modifiers )
+                dc[(key, modifiers)] = min(dc[(key, modifiers)], C)
+        else:
+            dc[(key, modifiers)] = C
+        modSet.add(modifiers)
         d[key] = modSet
 
 
@@ -379,7 +386,6 @@ def xmlChar(v):
     return v
 
 
-from io import StringIO
 deadXMLBuf = StringIO()
 
 print(file=deadXMLBuf)
@@ -392,21 +398,23 @@ previous = None
 # special case treated at the end.
 actions = set([' ', ' '])
 
-for c in sorted(list(d.keys())): #, case_order):
+# , case_order):
+for c in sorted(list(d.keys())):
     if len(d[c]) != 1 or len(c[0]) == 1:
         if tuple([]) in d[c]:
-            if dc[ c, tuple([]) ].lower() != previous:
+            if dc[c, tuple([])].lower() != previous:
                 print(file=deadXMLBuf)
-            print('    <action id="%s">' % xmlChar(dc[ c, tuple([]) ]), file=deadXMLBuf)
-            for mod in sorted(d[c]): #, mod_order):
+            print('    <action id="%s">' % xmlChar(dc[c, tuple([])]), file=deadXMLBuf)
+            # , mod_order):
+            for mod in sorted(d[c]):
                 # print >> deadXMLBuf, '    ', '_'.join([finalModNames[m] for m in mod]), dc[ c, mod ]
                 if len(mod) == 0:
                     fm = 'none'
                 else:
                     fm = '_'.join(mod)
-                print('      <when state="%s" output="%s"/>' % (fm, xmlChar(dc[ c, mod ])), file=deadXMLBuf)
-                
-            C = dc[ c, tuple([]) ]
+                print('      <when state="%s" output="%s"/>' % (fm, xmlChar(dc[c, mod])), file=deadXMLBuf)
+
+            C = dc[c, tuple([])]
             if C in compose.charActions:
                 a = compose.charActions[C]
                 if a in compose.statesByAction:
@@ -414,51 +422,49 @@ for c in sorted(list(d.keys())): #, case_order):
                         print('      <when state="%s" next="%s"/>' % ('_'.join(s), '_'.join(s+(a,))), file=deadXMLBuf)
                 if a in compose.outputsByAction:
                     for s, c1 in sorted(compose.outputsByAction[a]):
-                        print('      <when state="%s" output="%s"/>' % ('_'.join(s), xmlChar(c1)), file=deadXMLBuf)        
-                
+                        print('      <when state="%s" output="%s"/>' % ('_'.join(s), xmlChar(c1)), file=deadXMLBuf)
+
             print('    </action>', file=deadXMLBuf)
             actions.add(C)
-            
+
             # generate the code for 2 modifiers, when a char with on of the 2 diacritic sign
             # is produced
             subd = {}
-            for mod in [m for m in d[c] if len(m) == 2 ] :
+            for mod in [m for m in d[c] if len(m) == 2]:
                 for m1 in mod:
                     if (m1,) in d[c]:
                         for m2 in mod:
                             if m1 != m2:
-                                l = subd.get(dc[ c, (m1,) ], [])
-                                l.append((m2, dc[ c, mod ]))
-                                subd[dc[ c, (m1,) ]] = l
+                                l = subd.get(dc[c, (m1,)], [])
+                                l.append((m2, dc[c, mod]))
+                                subd[dc[c, (m1,)]] = l
             for c1 in sorted(subd.keys()):
                 print('    <action id="%s">' % xmlChar(c1), file=deadXMLBuf)
                 print('      <when state="%s" output="%s"/>' % ('none', xmlChar(c1)), file=deadXMLBuf)
                 for m, c2 in sorted(subd[c1]):
                     print('      <when state="%s" output="%s"/>' % (m, xmlChar(c2)), file=deadXMLBuf)
-                    
+
                 if c1 in compose.charActions:
                     a = compose.charActions[c1]
                     if a in compose.statesByAction:
                         for s in sorted(compose.statesByAction[a]):
-                            print('      <when state="%s" next="%s"/>' % ('_'.join(s), '_'.join(s+(a,))), file=deadXMLBuf)
+                            next_state = '_'.join(s+(a,))
+                            print('      <when state="%s" next="%s"/>' % ('_'.join(s), next_state), file=deadXMLBuf)
                     if a in compose.outputsByAction:
                         for s, C in sorted(compose.outputsByAction[a]):
                             print('      <when state="%s" output="%s"/>' % ('_'.join(s), xmlChar(C)), file=deadXMLBuf)
-                
+
                 print('    </action>', file=deadXMLBuf)
                 actions.add(c1)
-                
-            previous = dc[ c, tuple([]) ].lower()
-                            
-                
+            previous = dc[c, tuple([])].lower()
         else:
             raise ' '.join(c)(d[c])
 #  else:
 #    print >> deadXMLBuf, '*********************************************', c
-        
-        
+
+
 # actions with multi keys and without dead keys
-for C in sorted( set(list(compose.charActions.keys()) + list(xkb.chars) ) - actions - set(["Multi_key"])):
+for C in sorted(set(list(compose.charActions.keys()) + list(xkb.chars)) - actions - set(["Multi_key"])):
     a = compose.composeChars.get(C, C)
     if C not in terminators:
         print(file=deadXMLBuf)
@@ -469,7 +475,7 @@ for C in sorted( set(list(compose.charActions.keys()) + list(xkb.chars) ) - acti
                 print('      <when state="%s" next="%s"/>' % ('_'.join(s), '_'.join(s+(a,))), file=deadXMLBuf)
         if a in compose.outputsByAction:
             for s, c1 in sorted(compose.outputsByAction[a]):
-                print('      <when state="%s" output="%s"/>' % ('_'.join(s), xmlChar(c1)), file=deadXMLBuf)        
+                print('      <when state="%s" output="%s"/>' % ('_'.join(s), xmlChar(c1)), file=deadXMLBuf)
         print('    </action>', file=deadXMLBuf)
 
 
@@ -477,9 +483,11 @@ for C in sorted( set(list(compose.charActions.keys()) + list(xkb.chars) ) - acti
 print(file=deadXMLBuf)
 print('    <action id=" ">', file=deadXMLBuf)
 print('      <when state="none" output=" "/>', file=deadXMLBuf)
-for m in sorted(dmm): #, mod_order):
+# , mod_order):
+for m in sorted(dmm):
     if m != tuple():
-        print('      <when state="%s" output="%s"/>' % ('_'.join(m), ''.join([xmlChar(spaceTerminators.get(n, "?")) for n in m])), file=deadXMLBuf)
+        output = ''.join([xmlChar(spaceTerminators.get(n, "?")) for n in m])
+        print('      <when state="%s" output="%s"/>' % ('_'.join(m), output), file=deadXMLBuf)
 if ' ' in compose.charActions:
     a = compose.charActions[' ']
     if a in compose.statesByAction:
@@ -495,9 +503,11 @@ print('    </action>', file=deadXMLBuf)
 print(file=deadXMLBuf)
 print('    <action id=" "> <!-- nbsp -->', file=deadXMLBuf)
 print('      <when state="none" output=" "/>', file=deadXMLBuf)
-for m in sorted(dmm): #, mod_order):
+# , mod_order):
+for m in sorted(dmm):
     if m != tuple():
-        print('      <when state="%s" output="%s"/>' % ('_'.join(m), ''.join([xmlChar(combiningTerminators.get(n, "?")) for n in m])), file=deadXMLBuf)
+        output = ''.join([xmlChar(combiningTerminators.get(n, "?")) for n in m])
+        print('      <when state="%s" output="%s"/>' % ('_'.join(m), output), file=deadXMLBuf)
 if ' ' in compose.charActions:
     a = compose.charActions[' ']
     if a in compose.statesByAction:
@@ -509,26 +519,27 @@ if ' ' in compose.charActions:
 print('    </action>', file=deadXMLBuf)
 
 
-
 modStates = {}
 for m in dm:
     modStates[m] = [('none', m)]
 
-for m in sorted(dmm): #, mod_order):
+# , mod_order):
+for m in sorted(dmm):
     if len(m) == 2:
         m1, m2 = m
         modStates[m1].append((m2, '%s_%s' % (m1, m2)))
         modStates[m2].append((m1, '%s_%s' % (m1, m2)))
-    
+
 print(file=deadXMLBuf)
 print(file=deadXMLBuf)
 for m in sorted(modStates.keys()):
     l = modStates[m]
     print('    <action id="%s">' % m, file=deadXMLBuf)
     print('      <when state="%s" output="%s"/>' % (m, xmlChar(terminators.get(m, "?"))), file=deadXMLBuf)
-    for s, n in sorted(l): #, mod_order2):
+    # , mod_order2):
+    for s, n in sorted(l):
         print('      <when state="%s" next="%s"/>' % (s, n), file=deadXMLBuf)
-        
+
     if m in compose.charActions:
         a = compose.charActions[m]
         if a in compose.statesByAction:
@@ -536,10 +547,10 @@ for m in sorted(modStates.keys()):
                 print('      <when state="%s" next="%s"/>' % ('_'.join(s), '_'.join(s+(a,))), file=deadXMLBuf)
         if a in compose.outputsByAction:
             for s, c1 in sorted(compose.outputsByAction[a]):
-                print('      <when state="%s" output="%s"/>' % ('_'.join(s), xmlChar(c1)), file=deadXMLBuf)   
-                        
+                print('      <when state="%s" output="%s"/>' % ('_'.join(s), xmlChar(c1)), file=deadXMLBuf)
+
     print('    </action>', file=deadXMLBuf)
-    
+
 print('    <action id="Multi_key">', file=deadXMLBuf)
 print('      <when state="none" next="Multi_key"/>', file=deadXMLBuf)
 print('    </action>', file=deadXMLBuf)
@@ -555,13 +566,16 @@ def termChar(s):
     if len(compose.char(s)) > 1:
         return xmlChar(compose.terminators.get(compose.char(s), "?"))
     return xmlChar(compose.terminators.get(compose.char(s), compose.char(s)))
-    
+
+
 print(file=deadXMLBuf)
 print(file=deadXMLBuf)
 print('  <terminators>', file=deadXMLBuf)
-for m in sorted(dmm): #, mod_order):
+# , mod_order):
+for m in sorted(dmm):
     if m != tuple():
-        print('    <when state="%s" output="%s"/>' % ('_'.join(m), ''.join([xmlChar(terminators.get(n, "?")) for n in m])), file=deadXMLBuf)
+        output = ''.join([xmlChar(terminators.get(n, "?")) for n in m])
+        print('    <when state="%s" output="%s"/>' % ('_'.join(m), output), file=deadXMLBuf)
 for ss in sorted(compose.states):
     C = ''.join([termChar(s) for s in ss])
     s = '_'.join(list(ss))
@@ -573,5 +587,3 @@ deadXMLBuf.close()
 
 if __name__ == "__main__":
     print(deadXMLCode)
-    
-    
