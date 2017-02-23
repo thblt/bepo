@@ -22,13 +22,11 @@ then
   exit 1
 fi
 
-# make a temp dir to create the... temp files
-mkdir tmp
-pushd tmp
+# get the last version in a temp dir
 
-# get the last version
-svn export svn://svn.tuxfamily.org/svnroot/dvorak/svn/pilotes/trunk pilotes
-pushd pilotes/macosx
+pushd ..
+git checkout-index -a -f --prefix=macosx/tmp/
+pushd macosx/tmp/macosx
 
 rm -f "$OUT/bepo-macosx-$VERSION.dmg"
 hdiutil create "$OUT/tmp/bepo-macosx-$VERSION.dmg" -size 13m -fs HFS+ -volname "bépo ($VERSION)"
@@ -39,10 +37,10 @@ python generate_alt.py
 
 # use the icon for the volume
 ditto -rsrcFork bepo.icns "/Volumes/bépo ($VERSION)/.VolumeIcon.icns"
-/Developer/Tools/SetFile -a C "/Volumes/bépo ($VERSION)"
+SetFile -a C "/Volumes/bépo ($VERSION)"
 
 # set the icon for the bundle
-SetCustomIcon bepo.bundle bepo.icns
+fileicon set bepo.bundle bepo.icns
 
 # copy tho licenses
 cp ../CC-SA-BY.txt ../GFDL.txt  "/Volumes/bépo ($VERSION)"
