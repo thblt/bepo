@@ -52,9 +52,9 @@ charToCtrl = {
     "x": "^X",
     "y": "^Y",
     "z": "^Z",
-    "\\": "^\\", 
-    "]": "^]", 
-    "^": "^^", 
+    "\\": "^\\",
+    "]": "^]",
+    "^": "^^",
     "_": "^_",
     "@": "^@",
 }
@@ -68,6 +68,7 @@ deadNames = {
     "cedilla": "fa_cedilla",
 }
 
+
 def chrRepr(s):
     if len(s) == 1:
         if ord(s) < 127:
@@ -75,6 +76,7 @@ def chrRepr(s):
         else:
             return str(ord(s))
     return s
+
 
 def escape(c):
     if c == "'":
@@ -85,6 +87,7 @@ def escape(c):
         return "' '"
     return c
 
+
 out = open(sys.argv[2], "w")
 
 print(header, file=out)
@@ -93,15 +96,15 @@ f = open("keys.conf")
 for l in f:
     if l.startswith("#") or len(l.strip()) == 0:
         continue
-    k  = l.split("\t")[0]
-    scanCode  = l.split("\t")[6]
+    k = l.split("\t")[0]
+    scanCode = l.split("\t")[6]
     if k not in xkb.tmplValues:
         continue
-    
+
 #                                                         alt
 # scan                       cntrl          alt    alt   cntrl lock
 # code  base   shift  cntrl  shift  alt    shift  cntrl  shift state
-    s = "key "+str(int(scanCode))+"\t "
+    s = "key " + str(int(scanCode)) + "\t "
     for m, prefix in [("", "base"), ("_shift", "shift"), ("_capslock", "caps"), (None, "ctrl"), ("_option", "altg")]:
         if m is not None:
             v = xkb.tmplValues[k+m]
@@ -109,11 +112,11 @@ for l in f:
             if v == "":
                 v = "nop"
             try:
-              term = "nop"
-              cl = codecs.encode(v, "iso-8859-15")
+                term = "nop"
+                cl = codecs.encode(v, "iso-8859-15")
             except:
                 cl = "nop"
-            
+
         #    if terminators.has_key(v):
             if v in deadNames:
                 cl = deadNames[v]
@@ -141,6 +144,5 @@ for l in f:
                         print("ctrl already found for", k, cc, "- using", charToCtrl[cv], "instead.")
                     cc = charToCtrl[cv]
             s += "%s %s " % (prefix.encode('iso-8859-15'), escape(cc))
-      
-    print(s, file=out)
 
+    print(s, file=out)

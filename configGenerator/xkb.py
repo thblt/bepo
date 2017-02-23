@@ -45,7 +45,7 @@ for l in f:
         options[key] = res.group(2)
 #    print key, chars
 # print altgr["AD09"]
-# sys.exit()
+# sys.exit()
 
 tmplValues = {}
 chars = set()
@@ -102,7 +102,7 @@ for k, v in altgrshift.items():
   
 if '' in chars:
     chars.remove('')
-actions = set( [compose.name(c) for c in chars if c] )
+actions = set([compose.name(c) for c in chars if c])
 
 tmpl = codecs.open("bepo.tmpl", encoding='utf8').read()
 

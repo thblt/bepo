@@ -21,7 +21,7 @@ import xkb
 import dead_keys
 
 xkb.tmplValues["actionsAndTerminators"] = dead_keys.deadXMLCode
-for k,v in xkb.tmplValues.items():
+for k, v in xkb.tmplValues.items():
     xkb.tmplValues[k] = dead_keys.xmlChar(v)
 out = codecs.open(sys.argv[2], "w", "utf8")
-out.write( xkb.tmpl % xkb.tmplValues )
+out.write(xkb.tmpl % xkb.tmplValues)

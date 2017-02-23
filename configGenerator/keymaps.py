@@ -15,7 +15,8 @@ import codecs
 from optparse import OptionParser
 
 parser = OptionParser()
-parser.add_option("-u", "--utf8", action="store_true", dest="utf8", help="Generate an utf8 keymap instead of the usual latin9")
+parser.add_option("-u", "--utf8", action="store_true", dest="utf8",
+                  help="Generate an utf8 keymap instead of the usual latin9")
 opts, args = parser.parse_args()
 
 
@@ -252,7 +253,7 @@ keycode 126 = Incr_Console
 keycode 127 = Compose
 ################################################################
 
-  
+
 keycode  1 = Escape Escape
 keycode 14 = Delete  Delete
 keycode 15 = Tab Tab
@@ -484,8 +485,10 @@ namesData = {
     0x00ff: "ydiaeresis",
 }
 
-defaultDeads = ["grave", "acute", "circumflex", "tilde", "diaeresis", "cedilla", "ogonek", "caron", "breve", "doubleacute"]
-controls = ["Control_a",
+defaultDeads = ["grave", "acute", "circumflex", "tilde", "diaeresis", "cedilla", "ogonek", "caron", "breve",
+                "doubleacute"]
+controls = [
+    "Control_a",
     "Control_b",
     "Control_c",
     "Control_d",
@@ -686,7 +689,7 @@ for i in range(256):
 names = {}
 for c, n in namesData.items():
     names[chr(c)] = n
-#print names
+# print names
 
 out = open(args[1], "w")
 
@@ -696,21 +699,22 @@ f = open("keys.conf")
 for l in f:
     if l.startswith("#") or len(l.strip()) == 0:
         continue
-    k, scanCode  = l.split("\t")[:2]
+    k, scanCode = l.split("\t")[:2]
     if k not in xkb.tmplValues:
         continue
 
     for m1, m2 in [("", ""), ("_shift", "  Shift "), ("_option", "  Altgr "), ("_shift_option", "  Shift Altgr ")]:
-        for M1, M2 in [(None, ""), ("Control_", "  Control "), ("Meta_", "  Alt "), ("Meta_Control_", "  Control Alt "), ]:
+        for M1, M2 in [(None, ""), ("Control_", "  Control "), ("Meta_", "  Alt "),
+                       ("Meta_Control_", "  Control Alt ")]:
             v = xkb.tmplValues[k+m1]
-        #  v = terminators.get( v, v )
-        
+            #  v = terminators.get( v, v )
+
             if opts.utf8:
                 try:
                     name = utf8name(v)
                     term = "VoidSymbol"
                 except:
-            #    if terminators.has_key(v):
+                    # if terminators.has_key(v):
                     if v in defaultDeads:
                         name = "dead_" + v
                         try:
@@ -718,7 +722,7 @@ for l in f:
                         except:
                             term = "VoidSymbol"
                     elif v in terminators:
-                        # the key is not supported, but maybe its terminator is in the supported chars            
+                        # the key is not supported, but maybe its terminator is in the supported chars
                         try:
                             name = utf8name(terminators[v])
                             term = "VoidSymbol"
@@ -731,11 +735,11 @@ for l in f:
                         term = "VoidSymbol"
             else:
                 try:
-                  cl = codecs.encode(v, "iso-8859-15")
-                  name = names[cl]
-                  term = "VoidSymbol"
+                    cl = codecs.encode(v, "iso-8859-15")
+                    name = names[cl]
+                    term = "VoidSymbol"
                 except:
-            #    if terminators.has_key(v):
+                    # if terminators.has_key(v):
                     if v in defaultDeads:
                         name = "dead_" + v
                         try:
@@ -745,7 +749,7 @@ for l in f:
                         except:
                             term = "VoidSymbol"
                     elif v in terminators:
-                        # the key is not supported, but maybe its terminator is in the supported chars            
+                        # the key is not supported, but maybe its terminator is in the supported chars
                         try:
                             cl = codecs.encode(terminators[v], "iso-8859-15")
                             name = names[cl]
@@ -757,7 +761,7 @@ for l in f:
                         # print k, v
                         name = "VoidSymbol"
                         term = "VoidSymbol"
-                        
+
             if M1:
                 if M1+name in controls:
                     name = M1+name
@@ -769,16 +773,16 @@ for l in f:
                     name = M1+term.lower()
                 else:
                     name = "VoidSymbol"
-                
-            if "U+" not in name:
-                if ("FOUR_LEVEL_SEMIALPHABETIC" in xkb.options[k] or "FOUR_LEVEL_ALPHABETIC" in xkb.options[k]) and M1 == None and m1 in ("", "_shift"):
-                    name = "+"+name
-            
-                if ("FOUR_LEVEL_ALPHABETIC" in xkb.options[k]) and M1 == None and m1 in ("_option", "_option_shift"):
-                    name = "+"+name
-        
-            print("%s%skeycode %s = %s" % ( m2, M2, str(int(scanCode, 16)), name), file=out)
 
-        
-#out = codecs.open(sys.argv[2], "w", "utf8")
-out.write( footer )
+            if "U+" not in name:
+                if ("FOUR_LEVEL_SEMIALPHABETIC" in xkb.options[k] or "FOUR_LEVEL_ALPHABETIC" in xkb.options[k]) and \
+                                M1 is None and m1 in ("", "_shift"):
+                    name = "+"+name
+
+                if ("FOUR_LEVEL_ALPHABETIC" in xkb.options[k]) and M1 is None and m1 in ("_option", "_option_shift"):
+                    name = "+"+name
+
+            print("%s%skeycode %s = %s" % (m2, M2, str(int(scanCode, 16)), name), file=out)
+
+# out = codecs.open(sys.argv[2], "w", "utf8")
+out.write(footer)

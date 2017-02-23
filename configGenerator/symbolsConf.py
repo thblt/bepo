@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Génération de touches mortes pour mac os 
+# Génération de touches mortes pour mac os
 #
 # Copyright (C) 2008 Gaëtan Lehmann <gaetan.lehmann@jouy.inra.fr>
 #
@@ -27,6 +27,6 @@ for C in sorted(compose.composeChars.keys()):
     if ucode.startswith(r'\u'):
         ucode = ucode[2:].rjust(4, '0')
         Ucode = ucode.upper()
-        v  = (code, Ucode, code, code, ucode)
+        v = (code, Ucode, code, code, ucode)
         s = "\t".join(v) + "\n"
         out.write(s)
