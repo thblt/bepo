@@ -14,6 +14,7 @@
 
 import re
 # import sys
+
 import compose
 import codecs
 import defaults
@@ -33,15 +34,15 @@ options = {}
 for l in f:
     res = re_catchKey.match(l)
     if res:
-        key = unicode(res.group(1))
-    charsGroup = res.group(3)
-    chars = re.split(r', *', charsGroup)
-    chars = [c.strip() for c in chars]
-    chars = [compose.char(c) for c in chars]
-    chars = chars + [''] * (4 - len(chars))
+        key = str(res.group(1))
+        charsGroup = res.group(3)
+        chars = re.split(r', *', charsGroup)
+        chars = [c.strip() for c in chars]
+        chars = [compose.char(c) for c in chars]
+        chars = chars + [''] * (4 - len(chars))
 
-    normal[key], shift[key], altgr[key], altgrshift[key] = chars
-    options[key] = res.group(2)
+        normal[key], shift[key], altgr[key], altgrshift[key] = chars
+        options[key] = res.group(2)
 #    print key, chars
 # print altgr["AD09"]
 # sys.exit()
@@ -51,17 +52,17 @@ chars = set()
 
 tmplValues.update(normal)
 
-for k, v in normal.iteritems():
+for k, v in normal.items():
     V = v
     if "FOUR_LEVEL_SEMIALPHABETIC" not in options[k]:
         if len(v) == 1:
             V = v.upper()
-    else:
-        V = shift[k]
+        else:
+            V = shift[k]
     tmplValues[k + '_capslock'] = V
     chars.add(V)
 
-for k, v in shift.iteritems():
+for k, v in shift.items():
     tmplValues[k + '_shift'] = v
     chars.add(v)
 
@@ -69,12 +70,12 @@ for k, v in shift.iteritems():
     if "FOUR_LEVEL_SEMIALPHABETIC" not in options[k]:
         if len(v) == 1:
             V = v.lower()
-        else:
-            V = normal[k]
-        tmplValues[k + '_shift_capslock'] = V
-        chars.add(V)
+    else:
+        V = normal[k]
+    tmplValues[k + '_shift_capslock'] = V
+    chars.add(V)
 
-for k, v in altgr.iteritems():
+for k, v in altgr.items():
     tmplValues[k + '_option'] = v
     chars.add(v)
 
@@ -88,13 +89,8 @@ for k, v in altgr.iteritems():
     tmplValues[k + '_option_command'] = V
     chars.add(V)
 
-    V = v
-    if len(v) == 1:
-        V = v.lower()
-    tmplValues[k + '_shift_option_capslock'] = V
-    chars.add(V)
 
-for k, v in altgrshift.iteritems():
+for k, v in altgrshift.items():
     tmplValues[k + '_shift_option'] = v
     chars.add(v)
 

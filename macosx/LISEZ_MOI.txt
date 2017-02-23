@@ -24,8 +24,7 @@ Installation
 
 Pour installer la disposition de clavier, copiez le fichier « bepo.bundle » dans "/Utilisateurs/votre_nom_d'utilisateur/Bibliothèque/Keyboard Layouts" si vous désirez qu'elle soit disponible uniquement pour votre utilisateur, ou dans "/Bibliothèque/Keyboard Layouts" si vous désirez qu'elle soit disponible pour tous les utilisateurs de l'ordinateur.
 
-Vous devez fermer le programme « Préférences Système » pour que la nouvelle disposition soit prise en compte.
-Si cela ne fonctionne pas, vous devez fermer et rouvrir votre session pour que la nouvelle disposition de clavier soit prise en compte.
+Vous devez fermer et rouvrir votre session pour que la nouvelle disposition de clavier soit prise en compte.
 
 Ensuite, allez dans Préférences Système > International > Menu Saisie, et sélectionnez la/les disposition(s) de clavier que vous désirez utiliser en cochant les cases devant le(s) nom(s) correspondants. La case devant « Afficher le menu Saisie dans la barre des menus », dans le bas de la fenêtre, devrait aussi être cochée pour pouvoir sélectionner la disposition de clavier active.
 

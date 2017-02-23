@@ -12,11 +12,7 @@
 #
 
 
-# import unicodedata
 import re
-# import sys
-import defaults
-from terminators import terminators
 
 import defaults
 
@@ -26,8 +22,8 @@ def ishex(s):
         if c not in "0123456789abcdefABCDEF":
             return False
     return True
-
-fKeysymdef = file(defaults.keysymdefFile)
+    
+fKeysymdef = open(defaults.keysymdefFile)
 
 regexp = re.compile(r'#define XK_([^ ]+).*U\+([0-9A-Fa-f]+)')
 
@@ -39,19 +35,19 @@ for l in fKeysymdef:
         name = res.group(1)
         c = res.group(2)
         try:
-            C = unichr(int(c, 16))
+            C = chr( int(c, 16) )
             composeNames[name] = C
         except:
-            print l
+            print(l)
             pass
-
+            
 # some missing chars
-composeNames["combining_acute"] = u"́"     # "́
-composeNames["combining_belowdot"] = u"̣"  # "̣
-composeNames["combining_grave"] = u"̀"     # "̀
-composeNames["combining_tilde"] = u"̃"     # "̃
-composeNames["NoSymbol"] = u""            # ""
-composeNames["VoidSymbol"] = u""          # ""
+composeNames["combining_acute"] = "́"
+composeNames["combining_belowdot"] = "̣"
+composeNames["combining_grave"] = "̀"
+composeNames["combining_tilde"] = "̃"
+composeNames["NoSymbol"] = ""
+composeNames["VoidSymbol"] = ""
 # dead keys
 composeNames["dead_abovedot"] = "abovedot"
 composeNames["dead_abovering"] = "ringabove"
@@ -80,27 +76,30 @@ composeNames["dead_horn"] = "horn"
 composeNames["dead_belowdot"] = "belowdot"
 
 composeChars = {}
-for name, C in composeNames.iteritems():
+for name, C in composeNames.items():
     composeChars[C] = name
 # force oslash name
 composeChars["ø"] = "oslash"
 
+from terminators import terminators
+
+
 def char(k):
     if k == '' or k == '#':
-        return u''
-    if not composeNames.has_key(k) and k[0] == 'U' and len(k) >= 4 and ishex(k[1:]):
-        C = unichr(int(k[1:], 16))
+        return ''
+    if k not in composeNames and k[0] == 'U' and len(k) >= 4 and ishex(k[1:]):
+        C = chr(int(k[1:], 16))
         k = k.upper()
-        if composeChars.has_key(C):
+        if C in composeChars:
             return C
         composeNames[k] = C
         composeChars[C] = k
     return composeNames[k]
 
 def name(c):
-    if composeChars.has_key(c):
+    if c in composeChars:
         return composeChars[c]
-    k = u"U" + repr(c)[4:-1].rjust(4, '0').upper()
+    k = "U"+repr(c)[4:-1].rjust(4, '0').upper()
     composeNames[k] = c
     composeChars[c] = k
     return k
@@ -108,8 +107,8 @@ def name(c):
 def isSupportedChar(k):
     if k[0] == 'U' and len(k) == 5 and ishex(k[1:]):
         return True
-    return composeNames.has_key(k)
-
+    return k in composeNames
+    
 def areSupportedChars(ks):
     for k in ks:
         if not isSupportedChar(k):
@@ -120,22 +119,22 @@ def upperUnicode(k):
     if k[0] == 'U' and 5 <= len(k) <= 6 and ishex(k[1:]):
         return k.upper()
     return k
-
-fCompose = file(defaults.composeFile)
+    
+fCompose = open(defaults.composeFile)
 
 states = set()
 outputs = {}
 
-for l in fCompose:
-    if l.startswith("<Multi_key>") and "<KP_" not in l and "<underbar>" not in l and "<rightcaret>" not in l and "<leftshoe>" not in l and "<leftcaret>" not in l and "<rightshoe>" not in l and "<U223C>" not in l:
-        seq = re.findall('<([^ ]+)>', l.split(":")[0])
-        seq = [upperUnicode(s) for s in seq]
-        if areSupportedChars(seq):
-            for i in range(1, len(seq)):
-                s = tuple(seq[:i])
-                states.add(s)
-            c = l.split(":")[1].split()[1]
-            outputs[tuple(seq)] = char(c)
+# for l in fCompose:
+#     if l.startswith("<Multi_key>") and "<KP_" not in l and "<underbar>" not in l and "<rightcaret>" not in l and "<leftshoe>" not in l and "<leftcaret>" not in l and "<rightshoe>" not in l and "<U223C>" not in l:
+#         seq = re.findall('<([^ ]+)>', l.split(":")[0])
+#         seq = [upperUnicode(s) for s in seq]
+#         if areSupportedChars(seq):
+#             for i in range(1, len(seq)):
+#                 s = tuple(seq[:i])
+#                 states.add(s)
+#             c = l.split(":")[1].split()[1]
+#             outputs[tuple(seq)] = char(c)
 
 #    for k in seq:
 #      if k[0] == 'U' and len(k) == 5 and ishex(k[1:]):
@@ -152,7 +151,7 @@ for S in states:
 
 
 outputsByAction = {}
-for S in outputs.keys():
+for S in list(outputs.keys()):
     a = S[-1]
     s = S[:-1]
     sset = outputsByAction.get(a, set())
@@ -160,37 +159,40 @@ for S in outputs.keys():
     outputsByAction[a] = sset
 
 charActions = {}
-for a in set(statesByAction.keys() + outputsByAction.keys()):
+for a in set(list(statesByAction.keys()) + list(outputsByAction.keys())):
     # Check there are no items have different name but same unicode point
     # For instance, we once had both includedin and U2282 in the Compose file
-    if charActions.has_key(char(a)):
-        print (a, char(a), charActions[char(a)])
+    if char(a) in charActions :
+        print((a, char(a), charActions[char(a)]))
     charActions[char(a)] = a
 # print charActions[u'(']
 # sys.exit()
 
 if __name__ == "__main__":
-    for a in sorted(set(statesByAction.keys() + outputsByAction.keys())):
+    for a in sorted(set(list(statesByAction.keys()) + list(outputsByAction.keys())) ):
         C = char(a)
         if C:
-            print u'    <action id="%s">' % C
-            if statesByAction.has_key(a):
+            print('    <action id="%s">' % C)
+            if a in statesByAction:
                 for s in sorted(statesByAction[a]):
-                    print u'      <when state="%s" next="%s"/>' % ('_'.join(s), '_'.join(s + (a,)))
-            if outputsByAction.has_key(a):
+                    print('      <when state="%s" next="%s"/>' % ('_'.join(s), '_'.join(s+(a,))))
+            if a in outputsByAction:
                 for s, c in sorted(outputsByAction[a]):
-                    print u'      <when state="%s" output="%s"/>' % ('_'.join(s), c)
-            print u'    </action>'
+                    print('      <when state="%s" output="%s"/>' % ('_'.join(s), c))
+            print('    </action>')
 
-    print '''
-      <action id="Multikey">
-        <when state="none" next="Multikey"/>
-      </action>
-    '''
+            
+    print('''
+        <action id="Multikey">
+            <when state="none" next="Multikey"/>
+        </action>
+    ''')
 
-    print "  <terminators>"
+    print("  <terminators>")
     for ss in sorted(states):
         C = ''.join([terminators.get(char(s), char(s)) for s in ss])
         s = '_'.join(list(ss))
-        print '    <when state="%s" output="%s"/>' % (s, C)
-    print "  </terminators>"
+        print('    <when state="%s" output="%s"/>' % (s, C))
+    print("  </terminators>")
+    
+    
