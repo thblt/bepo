@@ -3,7 +3,7 @@
 #
 # Génération du clavier pour mac os à partir d'un fichier xkb
 #
-# Copyright (C) 2008 Gaëtan Lehmann <gaetan.lehmann@jouy.inra.fr>
+# Copyright (C) 2017 Gaëtan Lehmann <gaetan.lehmann@jouy.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
