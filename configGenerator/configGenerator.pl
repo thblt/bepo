@@ -51,7 +51,7 @@ die("Usage: $0 <output format>\n")
     if (!defined($ARGV[0]));
 
 my $OUTPUT_FORMAT      = $ARGV[0];
-my $VERSION = "1.1";
+my $VERSION = "1.1rc2";
 
 
 my $LAYOUT_DESCRIPTION = "layout.conf";
