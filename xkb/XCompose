@@ -248,7 +248,7 @@ include "%L"
 <dead_currency> <T> : U20AE
 <dead_currency> <t> : U20B8
 <dead_currency> <trademark> : U09F2
-<dead_currency> <UFDD4> : U09F3
+<dead_currency> <UFDD5> : U09F3
 <dead_currency> <U> : U5713
 <dead_currency> <u> : U5143
 <dead_currency> <w> : WonSign
@@ -977,11 +977,11 @@ include "%L"
 <UFDD7> <dead_cedilla> : U2103
 <UFDD7> <t> : downtack
 <UFDD7> <T> : uptack
-<UFDD7> <UFDD4> : lefttack
+<UFDD7> <UFDD5> : lefttack
 <UFDD7> <trademark> : U22A7
 <UFDD7> <s> : integral
 <UFDD7> <S> : U2211
-<UFDD7> <UFDD5> : U222E
+<UFDD7> <UFDD4> : U222E
 <UFDD7> <U017F> : dintegral
 <UFDD7> <n> : U2016
 <UFDD7> <N> : U2135
@@ -1019,7 +1019,7 @@ include "%L"
 <UFDD7> <dead_stroke> <dead_currency> : U228A
 <UFDD7> <dead_stroke> <dead_belowcomma> : U228B
 <UFDD7> <dead_stroke> <Q> : U2226
-<UFDD7> <dead_stroke> <UFDD4> : U22AC
+<UFDD7> <dead_stroke> <UFDD5> : U22AC
 <UFDD7> <dead_stroke> <trademark> : U22AD
 <UFDD7> <dead_stroke> <k> : U2241
 <dead_stroke> <UFDD7> <less> : U2280
@@ -1035,7 +1035,7 @@ include "%L"
 <dead_stroke> <UFDD7> <dead_currency> : U228A
 <dead_stroke> <UFDD7> <dead_belowcomma> : U228B
 <dead_stroke> <UFDD7> <Q> : U2226
-<dead_stroke> <UFDD7> <UFDD4> : U22AC
+<dead_stroke> <UFDD7> <UFDD5> : U22AC
 <dead_stroke> <UFDD7> <trademark> : U22AD
 <dead_stroke> <UFDD7> <k> : U2241
 <UFDD7> <dead_macron> <eacute> : U22BC
