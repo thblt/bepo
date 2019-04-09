@@ -84,42 +84,42 @@
   011   '*'    '0'    nop    nop    215    nop    nop    nop     C
   012   '='    176    nop    nop    nop    nop    nop    nop     O
   013   '%'    '`'    nop    nop    nop    nop    nop    nop     O
-  016   'b'    'B'    stx    stx    '|'    nop    nop    nop     C
-  017   233    201    nop    nop    dacu   ddac   nop    nop     C
+  016   'b'    'B'    stx    stx    '|'    '_'    nop    us      C
+  017   233    201    nop    nop    dacu   nop    nop    nop     C
   018   'p'    'P'    dle    dle    '&'    167    nop    nop     C
   019   'o'    'O'    si     si     189    188    nop    nop     C
   020   232    200    nop    nop    dgra   '`'    nop    nop     C
   021   dcir   '!'    nop    nop    161    nop    nop    nop     O
   022   'v'    'V'    syn    syn    dcar   nop    nop    nop     C
-  023   'd'    'D'    eot    eot    240    208    nop    nop     C
-  024   'l'    'L'    np     np     dsla   nop    nop    nop     C
+  023   'd'    'D'    eot    eot    nop    nop    nop    nop     C
+  024   'l'    'L'    np     np     dsla   163    nop    nop     C
   025   'j'    'J'    nl     nl     nop    nop    nop    nop     C
   026   'z'    'Z'    sub    sub    nop    nop    nop    nop     C
-  027   'w'    'W'    etb    etb    dbre   nop    nop    nop     C
+  027   'w'    'W'    etb    etb    nop    nop    nop    nop     C
   030   'a'    'A'    soh    soh    230    198    nop    nop     C
   031   'u'    'U'    nak    nak    249    217    nop    nop     C
   032   'i'    'I'    ht     ht     ddia   ddot   nop    nop     C
   033   'e'    'E'    enq    enq    164    dapo   nop    nop     C
-  034   ','    ';'    nop    nop    nop    nop    nop    nop     O
-  035   'c'    'C'    etx    etx    169    nop    nop    nop     C
-  036   't'    'T'    dc4    dc4    254    222    nop    nop     C
-  037   's'    'S'    dc3    dc3    223    nop    nop    nop     C
-  038   'r'    'R'    dc2    dc2    174    nop    nop    nop     C
+  034   ','    ';'    nop    nop    '''    nop    nop    nop     O
+  035   'c'    'C'    etx    etx    dced   169    nop    nop     C
+  036   't'    'T'    dc4    dc4    nop    nop    nop    nop     C
+  037   's'    'S'    dc3    dc3    nop    nop    nop    nop     C
+  038   'r'    'R'    dc2    dc2    dbre   174    nop    nop     C
   039   'n'    'N'    so     so     dtil   nop    nop    nop     C
-  040   'm'    'M'    cr     cr     dmac   186    nop    nop     C
-  043   231    199    nop    nop    dced   nop    nop    nop     C
-  086   234    202    nop    nop    '/'    nop    nop    nop     C
+  040   'm'    'M'    cr     cr     dmac   nop    nop    nop     C
+  043   231    199    nop    nop    nop    nop    nop    nop     C
+  086   234    202    nop    nop    '/'    '^'    nop    rs      C
   044   224    192    nop    nop    '\'    nop    fs     nop     C
   045   'y'    'Y'    em     em     '{'    nop    nop    nop     C
   046   'x'    'X'    can    can    '}'    nop    nop    nop     C
   047   '.'    ':'    nop    nop    nop    183    nop    nop     O
   048   'k'    'K'    vt     vt     '~'    nop    nop    nop     C
-  049   '''    '?'    nop    nop    191    nop    nop    nop     O
+  049   nop    '?'    nop    nop    191    nop    nop    nop     O
   050   'q'    'Q'    dc1    dc1    drin   nop    nop    nop     C
   051   'g'    'G'    bel    bel    nop    nop    nop    nop     C
   052   'h'    'H'    bs     bs     nop    nop    nop    nop     C
-  053   'f'    'F'    ack    ack    dogo   170    nop    nop     C
-  057   ' '    160    nop    nop    '_'    nop    us     nop     O
+  053   'f'    'F'    ack    ack    dogo   nop    nop    nop     C
+  057   ' '    nop    nop    nop    '_'    160    us     nop     O
 #
 # finally, the dead keys
 # ex:
@@ -143,7 +143,6 @@
   ddia '?' ( 'A' 196 ) ( 'a' 228 ) ( 'E' 203 ) ( 'e' 235 ) 
            ( 'I' 207 ) ( 'i' 239 ) ( 'O' 214 ) ( 'o' 246 ) 
            ( 'U' 220 ) ( 'u' 252 ) ( 'Y' 190 ) ( 'y' 255 ) 
-  ddac '?' 
   dgra '`' ( 'A' 192 ) ( 'a' 224 ) ( 'E' 200 ) ( 'e' 232 ) 
            ( 'I' 204 ) ( 'i' 236 ) ( 'O' 210 ) ( 'o' 242 ) 
            ( 'U' 217 ) ( 'u' 249 ) 
