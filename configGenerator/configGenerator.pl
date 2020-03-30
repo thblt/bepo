@@ -43,6 +43,8 @@ use strict;
 use warnings;
 use locale;
 use Data::Dumper;
+use File::Basename;
+use File::Spec;
 use utf8;
 
 binmode STDOUT, ":utf8";
@@ -51,19 +53,20 @@ die("Usage: $0 <output format>\n")
     if (!defined($ARGV[0]));
 
 my $OUTPUT_FORMAT      = $ARGV[0];
-my $VERSION = "1.1rc2";
+my $VERSION = $ENV{BEPO_VERSION} // "1.1rc2";
 
+my $SCRIPT_PATH        = dirname(__FILE__);
 
-my $LAYOUT_DESCRIPTION = "layout.conf";
-my $DEAKEY_BEHAVIOUR   = "deads.conf";
-my $VIRTUAL_KEYS       = "virtualKeys.conf";
-my $DOUBLE_DEADKEY_BEHAVIOUR = "double-dead-keys.conf";
+my $LAYOUT_DESCRIPTION = $ENV{BEPO_LAYOUT_DESCRIPTION}       // File::Spec->rel2abs("layout.conf", $SCRIPT_PATH);
+my $DEADKEY_BEHAVIOUR   = $ENV{BEPO_DEADKEY_BEHAVIOUR}        // File::Spec->rel2abs("deads.conf", $SCRIPT_PATH);
+my $VIRTUAL_KEYS       = $ENV{BEPO_VIRTUAL_KEYS}             // File::Spec->rel2abs("virtualKeys.conf", $SCRIPT_PATH);
+my $DOUBLE_DEADKEY_BEHAVIOUR = $ENV{BEPO_DOUBLE_DEADKEY_BEHAVIOUR} // File::Spec->rel2abs("double-dead-keys.conf", $SCRIPT_PATH);
 
-my $KEYS_FILE         = "keys.conf";
-my $SPECIAL_KEYS_FILE = "specialKeys.conf";
-my $SYMBOLS_FILE      = "symbols.conf";
+my $KEYS_FILE         =  $ENV{BEPO_KEYS_FILE}                // File::Spec->rel2abs("keys.conf", $SCRIPT_PATH);
+my $SPECIAL_KEYS_FILE =  $ENV{BEPO_SPECIAL_KEYS_FILE}        // File::Spec->rel2abs("specialKeys.conf", $SCRIPT_PATH);
+my $SYMBOLS_FILE      =  $ENV{BEPO_SYMBOLS_FILE}             // File::Spec->rel2abs("symbols.conf", $SCRIPT_PATH);
 
-my $UNICODE_FILE = "UnicodeData-9.0.b6.partial.fr.txt";
+my $UNICODE_FILE      =  $ENV{BEPO_UNICODE_FILE}             // File::Spec->rel2abs("UnicodeData-9.0.b6.partial.fr.txt", $SCRIPT_PATH);
 
 my $SHORT_VERSION = $VERSION;
 $SHORT_VERSION =~ tr/\.//d;
@@ -256,7 +259,7 @@ sub loadLayout()
 
 sub loadDeadKeys()
 {
-    open(FILE, "< $DEAKEY_BEHAVIOUR") or die("open: $!");
+    open(FILE, "< $DEADKEY_BEHAVIOUR") or die("open: $!");
 
     LINE: while (<FILE>)
     {
@@ -748,7 +751,7 @@ sub gen_win_msklc_bodyKeys()
 
         $level = "5"
             if (defined($keySymbols{'caps2'}) && $keySymbols{'caps2'} == 1);
-        
+
         my $line = $scanCodes{$key}."\t".$virtualKeys{$key}."\t\t".$level."\t";
         my $comment = "\t//";
         my $voidSymbol = "-1";
@@ -1274,7 +1277,6 @@ sub gen_description()
     print $header.$body.$footer;
 }
 
-
 SWITCH: for ($OUTPUT_FORMAT)
 {
     /x_xkb_root/i       && do { &gen_x_xkb_root();       last; };
@@ -1289,4 +1291,3 @@ SWITCH: for ($OUTPUT_FORMAT)
 
     die("output format must be one of the following: x_xkb_root, x_xkb_user, x_xmodmap, x_compose, win_msklc_azerty, win_msklc_bepo, win_msklc_qwertz, win_msklc_dvoraj\n");
 }
-
