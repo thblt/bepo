@@ -43,6 +43,8 @@ use strict;
 use warnings;
 use locale;
 use Data::Dumper;
+use File::Basename;
+use File::Spec;
 use utf8;
 
 binmode STDOUT, ":utf8";
@@ -50,18 +52,21 @@ binmode STDOUT, ":utf8";
 die("Usage: $0 <output format>\n")
     if (!defined($ARGV[0]));
 
-my $VERSION = "1.0";
 my $OUTPUT_FORMAT      = $ARGV[0];
+my $VERSION = $ENV{BEPO_VERSION} // "1.1rc2";
 
-my $LAYOUT_DESCRIPTION = "layout.conf";
-my $DEAKEY_BEHAVIOUR   = "deads.conf";
-my $VIRTUAL_KEYS       = "virtualKeys.conf";
+my $SCRIPT_PATH        = dirname(__FILE__);
 
-my $KEYS_FILE         = "keys.conf";
-my $SPECIAL_KEYS_FILE = "specialKeys.conf";
-my $SYMBOLS_FILE      = "symbols.conf";
+my $LAYOUT_DESCRIPTION = $ENV{BEPO_LAYOUT_DESCRIPTION}       // File::Spec->rel2abs("layout.conf", $SCRIPT_PATH);
+my $DEADKEY_BEHAVIOUR   = $ENV{BEPO_DEADKEY_BEHAVIOUR}        // File::Spec->rel2abs("deads.conf", $SCRIPT_PATH);
+my $VIRTUAL_KEYS       = $ENV{BEPO_VIRTUAL_KEYS}             // File::Spec->rel2abs("virtualKeys.conf", $SCRIPT_PATH);
+my $DOUBLE_DEADKEY_BEHAVIOUR = $ENV{BEPO_DOUBLE_DEADKEY_BEHAVIOUR} // File::Spec->rel2abs("double-dead-keys.conf", $SCRIPT_PATH);
 
-my $UNICODE_FILE = "UnicodeData-5.0.0.fr.txt";
+my $KEYS_FILE         =  $ENV{BEPO_KEYS_FILE}                // File::Spec->rel2abs("keys.conf", $SCRIPT_PATH);
+my $SPECIAL_KEYS_FILE =  $ENV{BEPO_SPECIAL_KEYS_FILE}        // File::Spec->rel2abs("specialKeys.conf", $SCRIPT_PATH);
+my $SYMBOLS_FILE      =  $ENV{BEPO_SYMBOLS_FILE}             // File::Spec->rel2abs("symbols.conf", $SCRIPT_PATH);
+
+my $UNICODE_FILE      =  $ENV{BEPO_UNICODE_FILE}             // File::Spec->rel2abs("UnicodeData-9.0.b6.partial.fr.txt", $SCRIPT_PATH);
 
 my $SHORT_VERSION = $VERSION;
 $SHORT_VERSION =~ tr/\.//d;
@@ -90,6 +95,7 @@ my %layoutSyms = ();
 
 my @deadKeysA = ();
 my %deadKeysH = ();
+my %doubleDeadKeys = ();
 
 my %unicodesDescription = ();
 
@@ -175,7 +181,7 @@ sub loadSymbols($)
         s/#.*$//g;
         my @array = ();
 
-        if (/^U([0-9A-Z]{4})$/)
+        if (/^U([0-9A-Z]{4,})$/)
         {
             my $unicode = $1;
             @array = ("U".$unicode, $unicode, "U".$unicode, "U".$unicode, lc($unicode));
@@ -253,7 +259,7 @@ sub loadLayout()
 
 sub loadDeadKeys()
 {
-    open(FILE, "< $DEAKEY_BEHAVIOUR") or die("open: $!");
+    open(FILE, "< $DEADKEY_BEHAVIOUR") or die("open: $!");
 
     LINE: while (<FILE>)
     {
@@ -288,6 +294,27 @@ sub loadDeadKeys()
 
 #print Dumper(\@deadKeysA);
 #print Dumper(\%deadKeysH);
+}
+
+sub loadDoubleDeadKeys()
+{
+    open(FILE, "< $DOUBLE_DEADKEY_BEHAVIOUR") or die("open: $!");
+
+    LINE: while(<FILE>)
+    {
+        next LINE if (/^(#.*|\s*)$/);
+
+        if (/^(.*?) ?= ?(.*?)$/)
+        {
+            my $sourceKey = $1;
+            my $targetKey = $2;
+            $doubleDeadKeys{$targetKey} = $sourceKey;
+        }
+    }
+
+    close(FILE);
+
+#print Dumper(\%doubleDeadKeys);
 }
 
 sub loadUnicode()
@@ -335,7 +362,7 @@ sub gen_x_xkb_user_header()
 {
     my $header = "xkb_keymap        {\n".
                  "\n".
-                 "xkb_keycodes      { include \"xfree86+aliases(azerty)\" };\n".
+                 "xkb_keycodes      { include \"evdev+aliases(azerty)\" };\n".
                  "\n".
                  "xkb_types         { include \"complete\" };\n".
                  "\n".
@@ -551,14 +578,28 @@ sub gen_x_compose_body()
         my $line = "";
         for my $key (@keyCombo)
         {
-            if (!defined($symbols{$key}))
+            if (defined($doubleDeadKeys{$key}))
             {
-                print STDERR "Unknown symbol: ".$key."\n";
-                $failed = 1;
+                my $doubledDeadKey = $doubleDeadKeys{$key};
+
+                if (defined($symbols{$doubledDeadKey}))
+                {
+                    $line .= "<".$symbols{$doubledDeadKey}."> <".$symbols{$doubledDeadKey}."> ";
+                }
+                else
+                {
+                    print STDERR "Unknown symbol: ".$doubledDeadKey."\n";
+                    $failed = 1;
+                }
+            }
+            elsif (defined($symbols{$key}))
+            {
+                $line .= "<".$symbols{$key}."> ";
             }
             else
             {
-                $line .= "<".$symbols{$key}."> ";
+                print STDERR "Unknown symbol: ".$key."\n";
+                $failed = 1;
             }
         }
 
@@ -577,7 +618,7 @@ sub gen_x_compose_body()
         next
             if ($failed == 1);
 
-        $body .= $line.": $symbols{$result}\n";
+        $body .= $line.": \"".&unicode2utf8($unicodes{$result})."\" ".$symbols{$result}."\n";
     }
 
     return $body;
@@ -710,7 +751,7 @@ sub gen_win_msklc_bodyKeys()
 
         $level = "5"
             if (defined($keySymbols{'caps2'}) && $keySymbols{'caps2'} == 1);
-        
+
         my $line = $scanCodes{$key}."\t".$virtualKeys{$key}."\t\t".$level."\t";
         my $comment = "\t//";
         my $voidSymbol = "-1";
@@ -942,6 +983,7 @@ sub gen_win_msklc_footer()
                  "02c7\t\"CARON\"\r\n".
                  "002c\t\"COMMA BELOW\"\r\n".
                  "002f\t\"STROKE\"\r\n".
+                 "2015\t\"HORIZONTAL STROKE\"\r\n".
                  "02d8\t\"BREVE\"\r\n".
                  "00a8\t\"DIAERESIS\"\r\n".
                  "02d9\t\"DOT ABOVE\"\r\n".
@@ -955,6 +997,9 @@ sub gen_win_msklc_footer()
                  "0309\t\"HOOK ABOVE\"\r\n".
                  "031b\t\"HORN\"\r\n".
                  "0323\t\"DOT BELOW\"\r\n".
+                 "00df\t\"LATIN\"\r\n".
+                 "1d40\t\"SUPERSCRIPT\"\r\n".
+                 "221e\t\"SCIENCE\"\r\n".
                  "\r\n".
                  "\r\n".
                  "DESCRIPTIONS\r\n".
@@ -1019,6 +1064,7 @@ sub gen_x_compose()
 {
     &loadSymbols($x_xkb_column);
     &loadDeadKeys();
+    &loadDoubleDeadKeys();
 
     my $header = &gen_x_compose_header();
     my $body   = &gen_x_compose_body();
@@ -1231,7 +1277,6 @@ sub gen_description()
     print $header.$body.$footer;
 }
 
-
 SWITCH: for ($OUTPUT_FORMAT)
 {
     /x_xkb_root/i       && do { &gen_x_xkb_root();       last; };
@@ -1246,4 +1291,3 @@ SWITCH: for ($OUTPUT_FORMAT)
 
     die("output format must be one of the following: x_xkb_root, x_xkb_user, x_xmodmap, x_compose, win_msklc_azerty, win_msklc_bepo, win_msklc_qwertz, win_msklc_dvoraj\n");
 }
-

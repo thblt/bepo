@@ -93,7 +93,7 @@ NormalKey	121	y	33	30	117
 NormalKey	120	x	43	30	105
 NormalKey	46	.	53	30	101
 NormalKey	107	k	63	30	101
-NormalKey	39	'	73	30	116
+NormalKey	8217	’	73	30	116
 NormalKey	113	q	83	30	116
 NormalKey	103	g	93	30	115
 NormalKey	104	h	103	30	114
@@ -161,7 +161,7 @@ HiddenKey	121	89	117	258	#Y
 HiddenKey	120	88	105	258	#X
 HiddenKey	46	58	101	258	#:
 HiddenKey	107	75	101	258	#K
-HiddenKey	39	63	116	257	#?
+HiddenKey	8217	63	116	257	#?
 HiddenKey	113	81	116	257	#Q
 HiddenKey	103	71	115	257	#G
 HiddenKey	104	72	114	257	#H
@@ -195,11 +195,11 @@ HiddenKey	111	339	101	264	#œ
 HiddenKey	232	96	101	264	#`
 HiddenKey	94	161	116	264	#¡
 HiddenKey	118	711	116	264	#ˇ
-HiddenKey	100	240	115	264	#ð
+HiddenKey	100	64983	115	264	#﷗
 HiddenKey	108	47	114	264	#/
-HiddenKey	106	307	110	264	#ĳ
-HiddenKey	122	601	110	264	#ə
-HiddenKey	119	728	110	264	#˘
+HiddenKey	106	9774	110	264	#☮
+HiddenKey	122	64984	110	264	#﷘
+HiddenKey	119	9884	110	264	#⚜
 #
 #       Unicode   Target  Finger  Control
 #Maj: 3ème ligne de touches
@@ -207,14 +207,14 @@ HiddenKey	97	230	97	264	#æ
 HiddenKey	117	249	117	264	#ù
 HiddenKey	105	168	105	264	#¨
 HiddenKey	101	8364	101	264	#€
-HiddenKey	44	8217	101	264	#’
-HiddenKey	99	169	116	264	#©
-HiddenKey	116	254	116	264	#þ
-HiddenKey	115	223	115	264	#ß
-HiddenKey	114	174	114	264	#®
+HiddenKey	44	39	101	264	#'
+HiddenKey	99	184	116	264	#¸
+HiddenKey	116	64981	116	264	#﷕
+HiddenKey	115	64980	115	264	#﷔
+HiddenKey	114	728	114	264	#˘
 HiddenKey	110	126	110	264	#~
 HiddenKey	109	175	110	264	#¯
-HiddenKey	231	184	110	264	#¸
+HiddenKey	231	9992	110	264	#✈
 #
 #       Unicode   Target  Finger  Control
 #Maj: 4ème ligne de touches
@@ -224,8 +224,8 @@ HiddenKey	121	123	117	264	#{
 HiddenKey	120	125	105	264	#}
 HiddenKey	46	8230	101	264	#…
 HiddenKey	107	126	101	264	#~
-HiddenKey	39	191	116	264	#¿
+HiddenKey	8217	191	116	264	#¿
 HiddenKey	113	176	116	264	#°
 HiddenKey	103	181	115	264	#µ
-HiddenKey	104	8224	114	264	#†
+HiddenKey	104	803	114	264	#̣
 HiddenKey	102	731	110	264	#˛

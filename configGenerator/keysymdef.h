@@ -1,5 +1,3 @@
-/* $Xorg: keysymdef.h,v 1.4 2001/02/09 02:03:23 $ */
-
 /***********************************************************
 Copyright 1987, 1994, 1998  The Open Group
 
@@ -47,7 +45,6 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 SOFTWARE.
 
 ******************************************************************/
-/* $XFree86: $ */
 
 /*
  * The "X11 Window System Protocol" standard defines in Appendix A the
@@ -56,7 +53,7 @@ SOFTWARE.
  * engraving) of a keyboard layout. This file assigns mnemonic macro
  * names for these keysyms.
  *
- * This file is also compiled (by xc/lib/X11/util/makekeys.c) into
+ * This file is also compiled (by src/util/makekeys.c in libX11) into
  * hash tables that can be accessed with X11 library functions such as
  * XStringToKeysym() and XKeysymToString().
  *
@@ -93,17 +90,26 @@ SOFTWARE.
  *    /^\#define XK_([a-zA-Z_0-9]+)\s+0x([0-9a-f]+)\s*\/\*\(U+([0-9A-F]{4,6}) (.*)\)\*\/\s*$/
  *    /^\#define XK_([a-zA-Z_0-9]+)\s+0x([0-9a-f]+)\s*(\/\*\s*(.*)\s*\*\/)?\s*$/
  *
- * When adding new keysyms to this file, do not forget to also update the
- * mappings in xc/lib/X11/KeyBind.c and the protocol specification in
- * xc/doc/specs/XProtocol/X11.keysyms.
- */
-
-/*
- * Now that the Xorg code base is managed in Git repositories, the KeyBind.c
- * and X11.keysyms files mentioned in the last comment block are located at:
+ * Before adding new keysyms, please do consider the following: In
+ * addition to the keysym names defined in this file, the
+ * XStringToKeysym() and XKeysymToString() functions will also handle
+ * any keysym string of the form "U0020" to "U007E" and "U00A0" to
+ * "U10FFFF" for all possible Unicode characters. In other words,
+ * every possible Unicode character has already a keysym string
+ * defined algorithmically, even if it is not listed here. Therefore,
+ * defining an additional keysym macro is only necessary where a
+ * non-hexadecimal mnemonic name is needed, or where the new keysym
+ * does not represent any existing Unicode character.
  *
- * src/KeyBind.c in the repo git://anongit.freedesktop.org/xorg/lib/libX11
- * specs/XProtocol/X11.keysyms in the repo git://anongit.freedesktop.org/xorg/doc/xorg-docs
+ * When adding new keysyms to this file, do not forget to also update the
+ * following as needed:
+ *
+ *   - the mappings in src/KeyBind.c in the repo
+ *     git://anongit.freedesktop.org/xorg/lib/libX11.git
+ *
+ *   - the protocol specification in specs/keysyms.xml
+ *     in the repo git://anongit.freedesktop.org/xorg/proto/x11proto.git
+ *
  */
 
 #define XK_VoidSymbol                  0xffffff  /* Void symbol */
@@ -376,6 +382,7 @@ SOFTWARE.
 #define XK_dead_acute                    0xfe51
 #define XK_dead_circumflex               0xfe52
 #define XK_dead_tilde                    0xfe53
+#define XK_dead_perispomeni              0xfe53  /* alias for dead_tilde */
 #define XK_dead_macron                   0xfe54
 #define XK_dead_breve                    0xfe55
 #define XK_dead_abovedot                 0xfe56
@@ -395,7 +402,39 @@ SOFTWARE.
 #define XK_dead_abovecomma               0xfe64
 #define XK_dead_psili                    0xfe64  /* alias for dead_abovecomma */
 #define XK_dead_abovereversedcomma       0xfe65
-#define XK_dead_dasia                    0xfe66  /* alias for dead_abovereversedcomma */
+#define XK_dead_dasia                    0xfe65  /* alias for dead_abovereversedcomma */
+#define XK_dead_doublegrave              0xfe66
+#define XK_dead_belowring                0xfe67
+#define XK_dead_belowmacron              0xfe68
+#define XK_dead_belowcircumflex          0xfe69
+#define XK_dead_belowtilde               0xfe6a
+#define XK_dead_belowbreve               0xfe6b
+#define XK_dead_belowdiaeresis           0xfe6c
+#define XK_dead_invertedbreve            0xfe6d
+#define XK_dead_belowcomma               0xfe6e
+#define XK_dead_currency                 0xfe6f
+
+/* extra dead elements for German T3 layout */
+#define XK_dead_lowline                  0xfe90
+#define XK_dead_aboveverticalline        0xfe91
+#define XK_dead_belowverticalline        0xfe92
+#define XK_dead_longsolidusoverlay       0xfe93
+
+/* dead vowels for universal syllable entry */
+#define XK_dead_a                        0xfe80
+#define XK_dead_A                        0xfe81
+#define XK_dead_e                        0xfe82
+#define XK_dead_E                        0xfe83
+#define XK_dead_i                        0xfe84
+#define XK_dead_I                        0xfe85
+#define XK_dead_o                        0xfe86
+#define XK_dead_O                        0xfe87
+#define XK_dead_u                        0xfe88
+#define XK_dead_U                        0xfe89
+#define XK_dead_small_schwa              0xfe8a
+#define XK_dead_capital_schwa            0xfe8b
+
+#define XK_dead_greek                    0xfe8c
 
 #define XK_First_Virtual_Screen          0xfed0
 #define XK_Prev_Virtual_Screen           0xfed1
@@ -446,6 +485,15 @@ SOFTWARE.
 #define XK_Pointer_Accelerate            0xfefa
 #define XK_Pointer_DfltBtnNext           0xfefb
 #define XK_Pointer_DfltBtnPrev           0xfefc
+
+/* Single-Stroke Multiple-Character N-Graph Keysyms For The X Input Method */
+
+#define XK_ch                            0xfea0
+#define XK_Ch                            0xfea1
+#define XK_CH                            0xfea2
+#define XK_c_h                           0xfea3
+#define XK_C_h                           0xfea4
+#define XK_C_H                           0xfea5
 
 #endif /* XK_XKB_KEYS */
 
@@ -751,9 +799,9 @@ SOFTWARE.
 #define XK_nacute                        0x01f1  /* U+0144 LATIN SMALL LETTER N WITH ACUTE */
 #define XK_ncaron                        0x01f2  /* U+0148 LATIN SMALL LETTER N WITH CARON */
 #define XK_odoubleacute                  0x01f5  /* U+0151 LATIN SMALL LETTER O WITH DOUBLE ACUTE */
-#define XK_udoubleacute                  0x01fb  /* U+0171 LATIN SMALL LETTER U WITH DOUBLE ACUTE */
 #define XK_rcaron                        0x01f8  /* U+0159 LATIN SMALL LETTER R WITH CARON */
 #define XK_uring                         0x01f9  /* U+016F LATIN SMALL LETTER U WITH RING ABOVE */
+#define XK_udoubleacute                  0x01fb  /* U+0171 LATIN SMALL LETTER U WITH DOUBLE ACUTE */
 #define XK_tcedilla                      0x01fe  /* U+0163 LATIN SMALL LETTER T WITH CEDILLA */
 #define XK_abovedot                      0x01ff  /* U+02D9 DOT ABOVE */
 #endif /* XK_LATIN2 */
@@ -837,32 +885,32 @@ SOFTWARE.
  * Latin 8
  */
 #ifdef XK_LATIN8
+#define XK_Wcircumflex                0x1000174  /* U+0174 LATIN CAPITAL LETTER W WITH CIRCUMFLEX */
+#define XK_wcircumflex                0x1000175  /* U+0175 LATIN SMALL LETTER W WITH CIRCUMFLEX */
+#define XK_Ycircumflex                0x1000176  /* U+0176 LATIN CAPITAL LETTER Y WITH CIRCUMFLEX */
+#define XK_ycircumflex                0x1000177  /* U+0177 LATIN SMALL LETTER Y WITH CIRCUMFLEX */
 #define XK_Babovedot                  0x1001e02  /* U+1E02 LATIN CAPITAL LETTER B WITH DOT ABOVE */
 #define XK_babovedot                  0x1001e03  /* U+1E03 LATIN SMALL LETTER B WITH DOT ABOVE */
 #define XK_Dabovedot                  0x1001e0a  /* U+1E0A LATIN CAPITAL LETTER D WITH DOT ABOVE */
-#define XK_Wgrave                     0x1001e80  /* U+1E80 LATIN CAPITAL LETTER W WITH GRAVE */
-#define XK_Wacute                     0x1001e82  /* U+1E82 LATIN CAPITAL LETTER W WITH ACUTE */
 #define XK_dabovedot                  0x1001e0b  /* U+1E0B LATIN SMALL LETTER D WITH DOT ABOVE */
-#define XK_Ygrave                     0x1001ef2  /* U+1EF2 LATIN CAPITAL LETTER Y WITH GRAVE */
 #define XK_Fabovedot                  0x1001e1e  /* U+1E1E LATIN CAPITAL LETTER F WITH DOT ABOVE */
 #define XK_fabovedot                  0x1001e1f  /* U+1E1F LATIN SMALL LETTER F WITH DOT ABOVE */
 #define XK_Mabovedot                  0x1001e40  /* U+1E40 LATIN CAPITAL LETTER M WITH DOT ABOVE */
 #define XK_mabovedot                  0x1001e41  /* U+1E41 LATIN SMALL LETTER M WITH DOT ABOVE */
 #define XK_Pabovedot                  0x1001e56  /* U+1E56 LATIN CAPITAL LETTER P WITH DOT ABOVE */
-#define XK_wgrave                     0x1001e81  /* U+1E81 LATIN SMALL LETTER W WITH GRAVE */
 #define XK_pabovedot                  0x1001e57  /* U+1E57 LATIN SMALL LETTER P WITH DOT ABOVE */
-#define XK_wacute                     0x1001e83  /* U+1E83 LATIN SMALL LETTER W WITH ACUTE */
 #define XK_Sabovedot                  0x1001e60  /* U+1E60 LATIN CAPITAL LETTER S WITH DOT ABOVE */
-#define XK_ygrave                     0x1001ef3  /* U+1EF3 LATIN SMALL LETTER Y WITH GRAVE */
+#define XK_sabovedot                  0x1001e61  /* U+1E61 LATIN SMALL LETTER S WITH DOT ABOVE */
+#define XK_Tabovedot                  0x1001e6a  /* U+1E6A LATIN CAPITAL LETTER T WITH DOT ABOVE */
+#define XK_tabovedot                  0x1001e6b  /* U+1E6B LATIN SMALL LETTER T WITH DOT ABOVE */
+#define XK_Wgrave                     0x1001e80  /* U+1E80 LATIN CAPITAL LETTER W WITH GRAVE */
+#define XK_wgrave                     0x1001e81  /* U+1E81 LATIN SMALL LETTER W WITH GRAVE */
+#define XK_Wacute                     0x1001e82  /* U+1E82 LATIN CAPITAL LETTER W WITH ACUTE */
+#define XK_wacute                     0x1001e83  /* U+1E83 LATIN SMALL LETTER W WITH ACUTE */
 #define XK_Wdiaeresis                 0x1001e84  /* U+1E84 LATIN CAPITAL LETTER W WITH DIAERESIS */
 #define XK_wdiaeresis                 0x1001e85  /* U+1E85 LATIN SMALL LETTER W WITH DIAERESIS */
-#define XK_sabovedot                  0x1001e61  /* U+1E61 LATIN SMALL LETTER S WITH DOT ABOVE */
-#define XK_Wcircumflex                0x1000174  /* U+0174 LATIN CAPITAL LETTER W WITH CIRCUMFLEX */
-#define XK_Tabovedot                  0x1001e6a  /* U+1E6A LATIN CAPITAL LETTER T WITH DOT ABOVE */
-#define XK_Ycircumflex                0x1000176  /* U+0176 LATIN CAPITAL LETTER Y WITH CIRCUMFLEX */
-#define XK_wcircumflex                0x1000175  /* U+0175 LATIN SMALL LETTER W WITH CIRCUMFLEX */
-#define XK_tabovedot                  0x1001e6b  /* U+1E6B LATIN SMALL LETTER T WITH DOT ABOVE */
-#define XK_ycircumflex                0x1000177  /* U+0177 LATIN SMALL LETTER Y WITH CIRCUMFLEX */
+#define XK_Ygrave                     0x1001ef2  /* U+1EF2 LATIN CAPITAL LETTER Y WITH GRAVE */
+#define XK_ygrave                     0x1001ef3  /* U+1EF3 LATIN SMALL LETTER Y WITH GRAVE */
 #endif /* XK_LATIN8 */
 
 /*
@@ -1427,6 +1475,7 @@ SOFTWARE.
 #define XK_leftdoublequotemark           0x0ad2  /* U+201C LEFT DOUBLE QUOTATION MARK */
 #define XK_rightdoublequotemark          0x0ad3  /* U+201D RIGHT DOUBLE QUOTATION MARK */
 #define XK_prescription                  0x0ad4  /* U+211E PRESCRIPTION TAKE */
+#define XK_permille                      0x0ad5  /* U+2030 PER MILLE SIGN */
 #define XK_minutes                       0x0ad6  /* U+2032 PRIME */
 #define XK_seconds                       0x0ad7  /* U+2033 DOUBLE PRIME */
 #define XK_latincross                    0x0ad9  /* U+271D LATIN CROSS */
@@ -1480,20 +1529,20 @@ SOFTWARE.
 #define XK_downcaret                     0x0ba8  /*(U+2228 LOGICAL OR)*/
 #define XK_upcaret                       0x0ba9  /*(U+2227 LOGICAL AND)*/
 #define XK_overbar                       0x0bc0  /*(U+00AF MACRON)*/
-#define XK_downtack                      0x0bc2  /* U+22A5 UP TACK */
+#define XK_downtack                      0x0bc2  /* U+22A4 DOWN TACK */
 #define XK_upshoe                        0x0bc3  /*(U+2229 INTERSECTION)*/
 #define XK_downstile                     0x0bc4  /* U+230A LEFT FLOOR */
 #define XK_underbar                      0x0bc6  /*(U+005F LOW LINE)*/
 #define XK_jot                           0x0bca  /* U+2218 RING OPERATOR */
 #define XK_quad                          0x0bcc  /* U+2395 APL FUNCTIONAL SYMBOL QUAD */
-#define XK_uptack                        0x0bce  /* U+22A4 DOWN TACK */
+#define XK_uptack                        0x0bce  /* U+22A5 UP TACK */
 #define XK_circle                        0x0bcf  /* U+25CB WHITE CIRCLE */
 #define XK_upstile                       0x0bd3  /* U+2308 LEFT CEILING */
 #define XK_downshoe                      0x0bd6  /*(U+222A UNION)*/
 #define XK_rightshoe                     0x0bd8  /*(U+2283 SUPERSET OF)*/
 #define XK_leftshoe                      0x0bda  /*(U+2282 SUBSET OF)*/
-#define XK_lefttack                      0x0bdc  /* U+22A2 RIGHT TACK */
-#define XK_righttack                     0x0bfc  /* U+22A3 LEFT TACK */
+#define XK_lefttack                      0x0bdc  /* U+22A3 LEFT TACK */
+#define XK_righttack                     0x0bfc  /* U+22A2 RIGHT TACK */
 #endif /* XK_APL */
 
 /*
@@ -1930,6 +1979,8 @@ SOFTWARE.
 #define XK_obarred                    0x1000275  /* U+0275 LATIN SMALL LETTER BARRED O */
 #define XK_SCHWA                      0x100018f  /* U+018F LATIN CAPITAL LETTER SCHWA */
 #define XK_schwa                      0x1000259  /* U+0259 LATIN SMALL LETTER SCHWA */
+#define XK_EZH                        0x10001b7  /* U+01B7 LATIN CAPITAL LETTER EZH */
+#define XK_ezh                        0x1000292  /* U+0292 LATIN SMALL LETTER EZH */
 /* those are not really Caucasus */
 /* For Inupiak */
 #define XK_Lbelowdot                  0x1001e36  /* U+1E36 LATIN CAPITAL LETTER L WITH DOT BELOW */
@@ -2356,3 +2407,91 @@ SOFTWARE.
 #define XK_braille_dots_2345678       0x10028fe  /* U+28fe BRAILLE PATTERN DOTS-2345678 */
 #define XK_braille_dots_12345678      0x10028ff  /* U+28ff BRAILLE PATTERN DOTS-12345678 */
 #endif /* XK_BRAILLE */
+
+/*
+ * Sinhala (http://unicode.org/charts/PDF/U0D80.pdf)
+ * http://www.nongnu.org/sinhala/doc/transliteration/sinhala-transliteration_6.html
+ */
+
+#ifdef XK_SINHALA
+#define XK_Sinh_ng            0x1000d82  /* U+0D82 SINHALA ANUSVARAYA */
+#define XK_Sinh_h2            0x1000d83  /* U+0D83 SINHALA VISARGAYA */
+#define XK_Sinh_a             0x1000d85  /* U+0D85 SINHALA AYANNA */
+#define XK_Sinh_aa            0x1000d86  /* U+0D86 SINHALA AAYANNA */
+#define XK_Sinh_ae            0x1000d87  /* U+0D87 SINHALA AEYANNA */
+#define XK_Sinh_aee           0x1000d88  /* U+0D88 SINHALA AEEYANNA */
+#define XK_Sinh_i             0x1000d89  /* U+0D89 SINHALA IYANNA */
+#define XK_Sinh_ii            0x1000d8a  /* U+0D8A SINHALA IIYANNA */
+#define XK_Sinh_u             0x1000d8b  /* U+0D8B SINHALA UYANNA */
+#define XK_Sinh_uu            0x1000d8c  /* U+0D8C SINHALA UUYANNA */
+#define XK_Sinh_ri            0x1000d8d  /* U+0D8D SINHALA IRUYANNA */
+#define XK_Sinh_rii           0x1000d8e  /* U+0D8E SINHALA IRUUYANNA */
+#define XK_Sinh_lu            0x1000d8f  /* U+0D8F SINHALA ILUYANNA */
+#define XK_Sinh_luu           0x1000d90  /* U+0D90 SINHALA ILUUYANNA */
+#define XK_Sinh_e             0x1000d91  /* U+0D91 SINHALA EYANNA */
+#define XK_Sinh_ee            0x1000d92  /* U+0D92 SINHALA EEYANNA */
+#define XK_Sinh_ai            0x1000d93  /* U+0D93 SINHALA AIYANNA */
+#define XK_Sinh_o             0x1000d94  /* U+0D94 SINHALA OYANNA */
+#define XK_Sinh_oo            0x1000d95  /* U+0D95 SINHALA OOYANNA */
+#define XK_Sinh_au            0x1000d96  /* U+0D96 SINHALA AUYANNA */
+#define XK_Sinh_ka            0x1000d9a  /* U+0D9A SINHALA KAYANNA */
+#define XK_Sinh_kha           0x1000d9b  /* U+0D9B SINHALA MAHA. KAYANNA */
+#define XK_Sinh_ga            0x1000d9c  /* U+0D9C SINHALA GAYANNA */
+#define XK_Sinh_gha           0x1000d9d  /* U+0D9D SINHALA MAHA. GAYANNA */
+#define XK_Sinh_ng2           0x1000d9e  /* U+0D9E SINHALA KANTAJA NAASIKYAYA */
+#define XK_Sinh_nga           0x1000d9f  /* U+0D9F SINHALA SANYAKA GAYANNA */
+#define XK_Sinh_ca            0x1000da0  /* U+0DA0 SINHALA CAYANNA */
+#define XK_Sinh_cha           0x1000da1  /* U+0DA1 SINHALA MAHA. CAYANNA */
+#define XK_Sinh_ja            0x1000da2  /* U+0DA2 SINHALA JAYANNA */
+#define XK_Sinh_jha           0x1000da3  /* U+0DA3 SINHALA MAHA. JAYANNA */
+#define XK_Sinh_nya           0x1000da4  /* U+0DA4 SINHALA TAALUJA NAASIKYAYA */
+#define XK_Sinh_jnya          0x1000da5  /* U+0DA5 SINHALA TAALUJA SANYOOGA NAASIKYAYA */
+#define XK_Sinh_nja           0x1000da6  /* U+0DA6 SINHALA SANYAKA JAYANNA */
+#define XK_Sinh_tta           0x1000da7  /* U+0DA7 SINHALA TTAYANNA */
+#define XK_Sinh_ttha          0x1000da8  /* U+0DA8 SINHALA MAHA. TTAYANNA */
+#define XK_Sinh_dda           0x1000da9  /* U+0DA9 SINHALA DDAYANNA */
+#define XK_Sinh_ddha          0x1000daa  /* U+0DAA SINHALA MAHA. DDAYANNA */
+#define XK_Sinh_nna           0x1000dab  /* U+0DAB SINHALA MUURDHAJA NAYANNA */
+#define XK_Sinh_ndda          0x1000dac  /* U+0DAC SINHALA SANYAKA DDAYANNA */
+#define XK_Sinh_tha           0x1000dad  /* U+0DAD SINHALA TAYANNA */
+#define XK_Sinh_thha          0x1000dae  /* U+0DAE SINHALA MAHA. TAYANNA */
+#define XK_Sinh_dha           0x1000daf  /* U+0DAF SINHALA DAYANNA */
+#define XK_Sinh_dhha          0x1000db0  /* U+0DB0 SINHALA MAHA. DAYANNA */
+#define XK_Sinh_na            0x1000db1  /* U+0DB1 SINHALA DANTAJA NAYANNA */
+#define XK_Sinh_ndha          0x1000db3  /* U+0DB3 SINHALA SANYAKA DAYANNA */
+#define XK_Sinh_pa            0x1000db4  /* U+0DB4 SINHALA PAYANNA */
+#define XK_Sinh_pha           0x1000db5  /* U+0DB5 SINHALA MAHA. PAYANNA */
+#define XK_Sinh_ba            0x1000db6  /* U+0DB6 SINHALA BAYANNA */
+#define XK_Sinh_bha           0x1000db7  /* U+0DB7 SINHALA MAHA. BAYANNA */
+#define XK_Sinh_ma            0x1000db8  /* U+0DB8 SINHALA MAYANNA */
+#define XK_Sinh_mba           0x1000db9  /* U+0DB9 SINHALA AMBA BAYANNA */
+#define XK_Sinh_ya            0x1000dba  /* U+0DBA SINHALA YAYANNA */
+#define XK_Sinh_ra            0x1000dbb  /* U+0DBB SINHALA RAYANNA */
+#define XK_Sinh_la            0x1000dbd  /* U+0DBD SINHALA DANTAJA LAYANNA */
+#define XK_Sinh_va            0x1000dc0  /* U+0DC0 SINHALA VAYANNA */
+#define XK_Sinh_sha           0x1000dc1  /* U+0DC1 SINHALA TAALUJA SAYANNA */
+#define XK_Sinh_ssha          0x1000dc2  /* U+0DC2 SINHALA MUURDHAJA SAYANNA */
+#define XK_Sinh_sa            0x1000dc3  /* U+0DC3 SINHALA DANTAJA SAYANNA */
+#define XK_Sinh_ha            0x1000dc4  /* U+0DC4 SINHALA HAYANNA */
+#define XK_Sinh_lla           0x1000dc5  /* U+0DC5 SINHALA MUURDHAJA LAYANNA */
+#define XK_Sinh_fa            0x1000dc6  /* U+0DC6 SINHALA FAYANNA */
+#define XK_Sinh_al            0x1000dca  /* U+0DCA SINHALA AL-LAKUNA */
+#define XK_Sinh_aa2           0x1000dcf  /* U+0DCF SINHALA AELA-PILLA */
+#define XK_Sinh_ae2           0x1000dd0  /* U+0DD0 SINHALA AEDA-PILLA */
+#define XK_Sinh_aee2          0x1000dd1  /* U+0DD1 SINHALA DIGA AEDA-PILLA */
+#define XK_Sinh_i2            0x1000dd2  /* U+0DD2 SINHALA IS-PILLA */
+#define XK_Sinh_ii2           0x1000dd3  /* U+0DD3 SINHALA DIGA IS-PILLA */
+#define XK_Sinh_u2            0x1000dd4  /* U+0DD4 SINHALA PAA-PILLA */
+#define XK_Sinh_uu2           0x1000dd6  /* U+0DD6 SINHALA DIGA PAA-PILLA */
+#define XK_Sinh_ru2           0x1000dd8  /* U+0DD8 SINHALA GAETTA-PILLA */
+#define XK_Sinh_e2            0x1000dd9  /* U+0DD9 SINHALA KOMBUVA */
+#define XK_Sinh_ee2           0x1000dda  /* U+0DDA SINHALA DIGA KOMBUVA */
+#define XK_Sinh_ai2           0x1000ddb  /* U+0DDB SINHALA KOMBU DEKA */
+#define XK_Sinh_o2            0x1000ddc  /* U+0DDC SINHALA KOMBUVA HAA AELA-PILLA*/
+#define XK_Sinh_oo2           0x1000ddd  /* U+0DDD SINHALA KOMBUVA HAA DIGA AELA-PILLA*/
+#define XK_Sinh_au2           0x1000dde  /* U+0DDE SINHALA KOMBUVA HAA GAYANUKITTA */
+#define XK_Sinh_lu2           0x1000ddf  /* U+0DDF SINHALA GAYANUKITTA */
+#define XK_Sinh_ruu2          0x1000df2  /* U+0DF2 SINHALA DIGA GAETTA-PILLA */
+#define XK_Sinh_luu2          0x1000df3  /* U+0DF3 SINHALA DIGA GAYANUKITTA */
+#define XK_Sinh_kunddaliya    0x1000df4  /* U+0DF4 SINHALA KUNDDALIYA */
+#endif /* XK_SINHALA */
