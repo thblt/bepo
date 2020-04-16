@@ -1,0 +1,4 @@
+65a66,68
+>   include "capslock(ctrl_modifier)"
+>   include "keypad(oss)"
+> 
