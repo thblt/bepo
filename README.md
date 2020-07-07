@@ -162,3 +162,7 @@ Définit le comportement des touches mortes, série de noms de caractère (pas d
 touches) séparés par des espaces.  Le dernier est le caractère produit par la succession des précédents.
 
 Le préfixe `L!` ignore la ligne pour les générateurs XKB.
+
+# Références et documentations
+
+ - La [note technique Apple TN2056 définissant le format .keylayout](https://developer.apple.com/library/archive/technotes/tn2056/_index.html).
