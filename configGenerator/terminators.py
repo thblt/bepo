@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 #
 # Les terminateurs pour les touches mortes
@@ -38,6 +38,7 @@ terminators = {
 "righthalfring": u"ʾ",
 "ringabove": u"°",
 "ringbelow": u"̥",
+"sci": u"∞",
 "stroke": u"/",
 "tilde": u"~",
 "tildebelow": u"̰",
@@ -77,6 +78,7 @@ combiningTerminators = {
 "righthalfring": u"ʾ",
 "ringabove": u"̊",
 "ringbelow": u"̥",
+"sci": u"∞",
 "stroke": u"̸",
 "tilde": u"̃",
 "tildebelow": u"̰",
