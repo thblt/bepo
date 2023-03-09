@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Parseur de fichier xkb et attribution des symboles aux touches pour mac os
 #
-# Copyright (C) 2008 Gaëtan Lehmann <gaetan.lehmann@jouy.inra.fr>
+# Copyright (C) 2017 Gaëtan Lehmann <gaetan.lehmann@gmail.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -12,13 +12,18 @@
 #
 
 
-import re, sys, compose, codecs, defaults
+import re
+import sys
+
+import compose
+import codecs
+import defaults
 from terminators import terminators
 
 str_catchKey = r"^\s*key\s*<([A-Z0-9]{4})>\s*{(.*)\[(.*)\]\s*}\s*;\s*(:?//.*|$)"
 re_catchKey = re.compile(str_catchKey)
 
-f = file(defaults.xkbFile)
+f = open(defaults.xkbFile)
 
 normal = {}
 shift = {}
@@ -27,77 +32,77 @@ altgrshift = {}
 options = {}
 
 for l in f:
-  res = re_catchKey.match(l)
-  if res:
-    key = unicode(res.group(1))
-    charsGroup = res.group(3)
-    chars = re.split(r', *', charsGroup)
-    chars = [c.strip() for c in chars]
-    chars = [compose.char(c) for c in chars]
-    chars = chars + ['']*(4-len(chars))
-    
-    normal[key], shift[key], altgr[key], altgrshift[key] = chars
-    options[key] = res.group(2)
+    res = re_catchKey.match(l)
+    if res:
+        key = str(res.group(1))
+        charsGroup = res.group(3)
+        chars = re.split(r', *', charsGroup)
+        chars = [c.strip() for c in chars]
+        chars = [compose.char(c) for c in chars]
+        chars = chars + ['']*(4-len(chars))
+        
+        normal[key], shift[key], altgr[key], altgrshift[key] = chars
+        options[key] = res.group(2)
 #    print key, chars
 # print altgr["AD09"]
-# sys.exit()
+# sys.exit()
 
 tmplValues = {}
 chars = set()
 
 tmplValues.update(normal)
 
-for k, v in normal.iteritems():
-  V = v
-  if "FOUR_LEVEL_SEMIALPHABETIC" not in options[k]:
-    if len(v) == 1:
-      V = v.upper()
-  else:
-    V = shift[k]
-  tmplValues[k+'_capslock'] = V
-  chars.add(V)
+for k, v in normal.items():
+    V = v
+    if "FOUR_LEVEL_SEMIALPHABETIC" not in options[k]:
+        if len(v) == 1:
+            V = v.upper()
+    else:
+        V = shift[k]
+    tmplValues[k+'_capslock'] = V
+    chars.add(V)
 
-for k, v in shift.iteritems():
-  tmplValues[k+'_shift'] = v
-  chars.add(v)
+for k, v in shift.items():
+    tmplValues[k+'_shift'] = v
+    chars.add(v)
+    
+    V = v
+    if "FOUR_LEVEL_SEMIALPHABETIC" not in options[k]:
+        if len(v) == 1:
+            V = v.lower()
+    else:
+        V = normal[k]
+    tmplValues[k+'_shift_capslock'] = V
+    chars.add(V)
+
+for k, v in altgr.items():
+    tmplValues[k+'_option'] = v
+    chars.add(v)
+
+    V = v
+    if len(v) == 1:
+        V = v.upper()
+    tmplValues[k+'_option_capslock'] = V
+    chars.add(V)
+
+    V = terminators.get( v, v )
+    tmplValues[k+'_option_command'] = V
+    chars.add(V)
+
+
+for k, v in altgrshift.items():
+    tmplValues[k+'_shift_option'] = v
+    chars.add(v)
+
+    V = v
+    if len(v) == 1:
+        V = v.lower()
+    tmplValues[k+'_shift_option_capslock'] = V
+    chars.add(V)
   
-  V = v
-  if "FOUR_LEVEL_SEMIALPHABETIC" not in options[k]:
-    if len(v) == 1:
-      V = v.lower()
-  else:
-    V = normal[k]
-  tmplValues[k+'_shift_capslock'] = V
-  chars.add(V)
-
-for k, v in altgr.iteritems():
-  tmplValues[k+'_option'] = v
-  chars.add(v)
-
-  V = v
-  if len(v) == 1:
-    V = v.upper()
-  tmplValues[k+'_option_capslock'] = V
-  chars.add(V)
-
-  V = terminators.get( v, v )
-  tmplValues[k+'_option_command'] = V
-  chars.add(V)
-
-
-for k, v in altgrshift.iteritems():
-  tmplValues[k+'_shift_option'] = v
-  chars.add(v)
-
-  V = v
-  if len(v) == 1:
-    V = v.lower()
-  tmplValues[k+'_shift_option_capslock'] = V
-  chars.add(V)
- 
 if '' in chars:
-  chars.remove('')
-actions = set( [compose.name(c) for c in chars if c] )
+    chars.remove('')
+actions = set([compose.name(c) for c in chars if c])
 
 tmpl = codecs.open("bepo.tmpl", encoding='utf8').read()
 

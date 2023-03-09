@@ -1,9 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Produit une carte de touches à partir d'un fichier xkb
 #
-# Copyright (C) 2008 Gaëtan Lehmann <gaetan.lehmann@jouy.inra.fr>
+# Copyright (C) 2017 Gaëtan Lehmann <gaetan.lehmann@gmail.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@ import xkb, dead_keys, codecs, unicodedata
 from terminators import terminators, combiningTerminators, spaceTerminators
 
 
-header = u"""<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+header = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -649,12 +649,12 @@ header = u"""<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
 """
 
-footer = u"""
+footer = """
   </g>
 </svg>
 """
 
-charTmpl = u"""    <text
+charTmpl = """    <text
        x="%s"
        y="%s"
        style="font-size:20px;fill:%s;font-family:DejaVu Sans Mono"
@@ -673,14 +673,14 @@ altgrOffset = (70-36.852917, 175-129.41629)
 altgrShiftOffset = (70-36.852917, 150-129.41629)
 
 
-mainChars = u"$\"«»()_+-/*=%^,.'#1234567890@BÉPOÈ!VDLJZWAUIE?CTSRNMÇÊÀYH:K;QGXF—<>[]|&`¨€~\{}…ÆŒÙ°"
+mainChars = "$\"«»()_+-/*=%^,.'#1234567890@BÉPOÈ!VDLJZWAUIE?CTSRNMÇÊÀYH:K;QGXF—<>[]|&`¨€~\{}…ÆŒÙ°"
 
 keys = [
-  ["TLDE", "AE01", "AE02", "AE03", "AE04", "AE05", "AE06", "AE07", "AE08", "AE09", "AE10", "AE11", "AE12"],
-  ["AD01", "AD02", "AD03", "AD04", "AD05", "AD06", "AD07", "AD08", "AD09", "AD10", "AD11", "AD12"],
-  ["AC01", "AC02", "AC03", "AC04", "AC05", "AC06", "AC07", "AC08", "AC09", "AC10", "AC11", "BKSL"],
-  ["LSGT", "AB01", "AB02", "AB03", "AB04", "AB05", "AB06", "AB07", "AB08", "AB09", "AB10"],
-  ["SPCE"]
+    ["TLDE", "AE01", "AE02", "AE03", "AE04", "AE05", "AE06", "AE07", "AE08", "AE09", "AE10", "AE11", "AE12"],
+    ["AD01", "AD02", "AD03", "AD04", "AD05", "AD06", "AD07", "AD08", "AD09", "AD10", "AD11", "AD12"],
+    ["AC01", "AC02", "AC03", "AC04", "AC05", "AC06", "AC07", "AC08", "AC09", "AC10", "AC11", "BKSL"],
+    ["LSGT", "AB01", "AB02", "AB03", "AB04", "AB05", "AB06", "AB07", "AB08", "AB09", "AB10"],
+    ["SPCE"]
 ]
 
 firstOffset = [(36.852917, 129.41629), (128.68188, 196.81883), (145.41165, 264.22134), (111.16536, 331.62384), (445, 399.8042)]
@@ -688,155 +688,155 @@ xKeyOffset = 102.75843-36.852917
 
 
 def offset(k):
-  for i, line in enumerate(keys):
-    if k in line:
-      j = line.index(k)
-      fo = firstOffset[i]
-      return (fo[0] + xKeyOffset*j, fo[1])
-  raise "no such key: "+k
+    for i, line in enumerate(keys):
+        if k in line:
+            j = line.index(k)
+            fo = firstOffset[i]
+            return (fo[0] + xKeyOffset*j, fo[1])
+    raise "no such key: "+k
 
 
 def offsetAndColor(k):
-  k2 = k.split("_")[0]
-  o = offset(k2)
-  if "_shift_option" in k:
-    so = altgrShiftOffset
-    color = altgrShiftColor
-  elif "_shift" in k:
-    so = shiftOffset
-    color = shiftColor
-  elif "_option" in k:
-    so = altgrOffset
-    color = altgrColor
-  else:
-    so = mainOffset
-    color = mainColor
-  return (o[0]+so[0], o[1]+so[1], color)
+    k2 = k.split("_")[0]
+    o = offset(k2)
+    if "_shift_option" in k:
+        so = altgrShiftOffset
+        color = altgrShiftColor
+    elif "_shift" in k:
+        so = shiftOffset
+        color = shiftColor
+    elif "_option" in k:
+        so = altgrOffset
+        color = altgrColor
+    else:
+        so = mainOffset
+        color = mainColor
+    return (o[0]+so[0], o[1]+so[1], color)
 
 
 def xmlChar(v):
-  if v == u'"':
-    v = u"&#x0022;"
-  elif v == u'<':
-    v = u"&#x003c;"
-  elif v == u'&':
-    v = u'&#x0026;'
-  return v
-  
-  
+    if v == '"':
+        v = "&#x0022;"
+    elif v == '<':
+        v = "&#x003c;"
+    elif v == '&':
+        v = '&#x0026;'
+    return v
+    
+    
 out = codecs.open(sys.argv[2]+".svg", "w", "utf8")
-print >> out, header
-for k, v in xkb.tmplValues.iteritems():
-  v2 = terminators.get( v, v )
-  if "_capslock" in k or "_command" in k:
-   continue
-  x, y, color = offsetAndColor(k)
-  if terminators.has_key(v):
-   color = deadColor
-  print >> out, charTmpl % (x, y, color, xmlChar(v2))
-print >> out, footer
+print(header, file=out)
+for k, v in xkb.tmplValues.items():
+    v2 = terminators.get( v, v )
+    if "_capslock" in k or "_command" in k:
+      continue
+    x, y, color = offsetAndColor(k)
+    if v in terminators:
+      color = deadColor
+    print(charTmpl % (x, y, color, xmlChar(v2)), file=out)
+print(footer, file=out)
 out.close()
 
 
 out = codecs.open(sys.argv[2]+"-simplifiee.svg", "w", "utf8")
-print >> out, header
-for k, v in xkb.tmplValues.iteritems():
-  v2 = terminators.get( v, v )
-  if "_capslock" in k or "_command" in k:
-    continue
-  x, y, color = offsetAndColor(k)
-  if color == shiftColor and xkb.tmplValues[k.split("_")[0]] == v.lower():
-    color = mainColor
-  elif color == altgrShiftColor and xkb.tmplValues[k.split("_")[0]+"_option"] == v.lower():
-    color = altgrColor
-  if terminators.has_key(v):
-    color = deadColor
-  if ("_option" not in k and v2 in mainChars) or ("_option" in k and v2 in mainChars.lower()) or ("_shift" in k and k.count("_") == 1) or (k.count("_") == 0 and xkb.tmplValues[k+"_shift"] != v2.upper()):
-    print >> out, charTmpl % (x, y, color, xmlChar(v2))
-print >> out, footer
+print(header, file=out)
+for k, v in xkb.tmplValues.items():
+    v2 = terminators.get( v, v )
+    if "_capslock" in k or "_command" in k:
+        continue
+    x, y, color = offsetAndColor(k)
+    if color == shiftColor and xkb.tmplValues[k.split("_")[0]] == v.lower():
+        color = mainColor
+    elif color == altgrShiftColor and xkb.tmplValues[k.split("_")[0]+"_option"] == v.lower():
+        color = altgrColor
+    if v in terminators:
+        color = deadColor
+    if ("_option" not in k and v2 in mainChars) or ("_option" in k and v2 in mainChars.lower()) or ("_shift" in k and k.count("_") == 1) or (k.count("_") == 0 and xkb.tmplValues[k+"_shift"] != v2.upper()):
+        print(charTmpl % (x, y, color, xmlChar(v2)), file=out)
+print(footer, file=out)
 out.close()
 
 
 out = codecs.open(sys.argv[2]+"-capslock.svg", "w", "utf8")
-print >> out, header
-for k, v in xkb.tmplValues.iteritems():
-  v2 = terminators.get( v, v )
-  if "_capslock" not in k or "_command" in k:
-    continue
-  x, y, color = offsetAndColor(k)
-  if terminators.has_key(v):
-    color = deadColor
-  print >> out, charTmpl % (x, y, color, xmlChar(v2))
-print >> out, footer
+print(header, file=out)
+for k, v in xkb.tmplValues.items():
+    v2 = terminators.get( v, v )
+    if "_capslock" not in k or "_command" in k:
+        continue
+    x, y, color = offsetAndColor(k)
+    if v in terminators:
+        color = deadColor
+    print(charTmpl % (x, y, color, xmlChar(v2)), file=out)
+print(footer, file=out)
 out.close()
 
 
 # find the dead keys used here
 dks = set()
-for v in xkb.tmplValues.itervalues():
-  if terminators.has_key(v):
-    dks.add(v)
+for v in xkb.tmplValues.values():
+    if v in terminators:
+        dks.add(v)
 
 for m in sorted(dks):
-  deadName = "dead_" + m.replace("ringabove", "abovering")
-  out = codecs.open(sys.argv[2]+"-"+deadName+".svg", "w", "utf8")
-  print >> out, header
-  fullMapValues = {}
-  for k, mods in sorted(dead_keys.dc):
-    if mods == (m,) and dead_keys.dc.has_key((k, ())):
-      k2 = dead_keys.dc[k, ()]
-      v2 = dead_keys.dc[k, mods]
-      for k3, v3 in xkb.tmplValues.iteritems():
-        if v3 == k2 and "_capslock" not in k3 and "_command" not in k:
-          x, y, color = offsetAndColor(k3)
-          print >> out, charTmpl % (x, y, color, xmlChar(v2))
-    elif m in mods:
-      K = (k, tuple(a for a in mods if a != m))
-      if dead_keys.dc.has_key(K):
-        k2 = dead_keys.dc[K]
-        v2 = dead_keys.dc[k, mods]
-        for k3, v3 in xkb.tmplValues.iteritems():
-          if v3 == k2 and "_capslock" not in k3 and "_command" not in k:
-            x, y, color = offsetAndColor(k3)
-            print >> out, charTmpl % (x, y, color, xmlChar(v2))
-  for k, v in xkb.tmplValues.iteritems():
-    if "_capslock" in k or "_command" in k:
-      continue
-    x, y, color = offsetAndColor(k)
-    if v == u" ":
-      print >> out, charTmpl % (x, y, color, xmlChar(spaceTerminators[m]))
-    elif v == m:
-      print >> out, charTmpl % (x, y, color, xmlChar(terminators[m]))
-    elif v == u" ":
-      print >> out, charTmpl % (x, y, color, xmlChar(combiningTerminators[m])) 
-  print >> out, footer
-  out.close()
+    deadName = "dead_" + m.replace("ringabove", "abovering")
+    out = codecs.open(sys.argv[2]+"-"+deadName+".svg", "w", "utf8")
+    print(header, file=out)
+    fullMapValues = {}
+    for k, mods in sorted(dead_keys.dc):
+        if mods == (m,) and (k, ()) in dead_keys.dc:
+            k2 = dead_keys.dc[k, ()]
+            v2 = dead_keys.dc[k, mods]
+            for k3, v3 in xkb.tmplValues.items():
+                if v3 == k2 and "_capslock" not in k3 and "_command" not in k:
+                    x, y, color = offsetAndColor(k3)
+                    print(charTmpl % (x, y, color, xmlChar(v2)), file=out)
+        elif m in mods:
+            K = (k, tuple(a for a in mods if a != m))
+            if K in dead_keys.dc:
+                k2 = dead_keys.dc[K]
+                v2 = dead_keys.dc[k, mods]
+                for k3, v3 in xkb.tmplValues.items():
+                    if v3 == k2 and "_capslock" not in k3 and "_command" not in k:
+                        x, y, color = offsetAndColor(k3)
+                        print(charTmpl % (x, y, color, xmlChar(v2)), file=out)
+    for k, v in xkb.tmplValues.items():
+        if "_capslock" in k or "_command" in k:
+            continue
+        x, y, color = offsetAndColor(k)
+        if v == " ":
+            print(charTmpl % (x, y, color, xmlChar(spaceTerminators[m])), file=out)
+        elif v == m:
+            print(charTmpl % (x, y, color, xmlChar(terminators[m])), file=out)
+        elif v == " ":
+            print(charTmpl % (x, y, color, xmlChar(combiningTerminators[m])), file=out) 
+    print(footer, file=out)
+    out.close()
 
 
 
 for i, m1 in enumerate(sorted(dks)):
-  for m2 in sorted(dks)[i+1:]:
-    s = u""
-    for k, mods in sorted(dead_keys.dc):
-      if mods == (m1, m2) and dead_keys.dc.has_key((k, ())):
-        k2 = dead_keys.dc[k, ()]
-        v2 = dead_keys.dc[k, mods]
-        for k3, v3 in xkb.tmplValues.iteritems():
-          if v3 == k2 and "_capslock" not in k3 and "_command" not in k:
-            x, y, color = offsetAndColor(k3)
-            s += charTmpl % (x, y, color, xmlChar(v2))
-    if s != u"":
-      for k, v in xkb.tmplValues.iteritems():
-        if "_capslock" in k or "_command" in k:
-          continue
-        x, y, color = offsetAndColor(k)
-        if v == u" ":
-          s += charTmpl % (x, y, color, xmlChar(spaceTerminators[m1])+xmlChar(spaceTerminators[m2]))
-        elif v == u" ":
-          s += charTmpl % (x, y, color, xmlChar(combiningTerminators[m1])+xmlChar(combiningTerminators[m2])) 
-      deadName = "+".join("dead_" + m.replace("ringabove", "abovering") for m in (m1, m2))
-      out = codecs.open(sys.argv[2]+"-"+deadName+".svg", "w", "utf8")
-      print >> out, header
-      print >> out, s
-      print >> out, footer
-      out.close()
+    for m2 in sorted(dks)[i+1:]:
+        s = ""
+        for k, mods in sorted(dead_keys.dc):
+            if mods == (m1, m2) and (k, ()) in dead_keys.dc:
+                k2 = dead_keys.dc[k, ()]
+                v2 = dead_keys.dc[k, mods]
+                for k3, v3 in xkb.tmplValues.items():
+                    if v3 == k2 and "_capslock" not in k3 and "_command" not in k:
+                        x, y, color = offsetAndColor(k3)
+                        s += charTmpl % (x, y, color, xmlChar(v2))
+        if s != "":
+            for k, v in xkb.tmplValues.items():
+                if "_capslock" in k or "_command" in k:
+                    continue
+                x, y, color = offsetAndColor(k)
+                if v == " ":
+                    s += charTmpl % (x, y, color, xmlChar(spaceTerminators[m1])+xmlChar(spaceTerminators[m2]))
+                elif v == " ":
+                    s += charTmpl % (x, y, color, xmlChar(combiningTerminators[m1])+xmlChar(combiningTerminators[m2])) 
+            deadName = "+".join("dead_" + m.replace("ringabove", "abovering") for m in (m1, m2))
+            out = codecs.open(sys.argv[2]+"-"+deadName+".svg", "w", "utf8")
+            print(header, file=out)
+            print(s, file=out)
+            print(footer, file=out)
+            out.close()
