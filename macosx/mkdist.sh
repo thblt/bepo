@@ -2,7 +2,7 @@
 #
 # Génération du dmg contenant le pilote de clavier bépo
 #
-# Copyright (C) 2017 Gaëtan Lehmann <gaetan.lehmann@gmail.com>
+# Copyright (C) 2008 Gaëtan Lehmann <gaetan.lehmann@jouy.inra.fr>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,11 +22,13 @@ then
   exit 1
 fi
 
-# get the last version in a temp dir
+# make a temp dir to create the... temp files
+mkdir tmp
+pushd tmp
 
-pushd ..
-git checkout-index -a -f --prefix=macosx/tmp/
-pushd macosx/tmp/macosx
+# get the last version
+svn export svn://svn.tuxfamily.org/svnroot/dvorak/svn/pilotes/trunk pilotes
+pushd pilotes/macosx
 
 rm -f "$OUT/bepo-macosx-$VERSION.dmg"
 hdiutil create "$OUT/tmp/bepo-macosx-$VERSION.dmg" -size 13m -fs HFS+ -volname "bépo ($VERSION)"
@@ -37,10 +39,10 @@ python generate_alt.py
 
 # use the icon for the volume
 ditto -rsrcFork bepo.icns "/Volumes/bépo ($VERSION)/.VolumeIcon.icns"
-SetFile -a C "/Volumes/bépo ($VERSION)"
+/Developer/Tools/SetFile -a C "/Volumes/bépo ($VERSION)"
 
 # set the icon for the bundle
-fileicon set bepo.bundle bepo.icns
+SetCustomIcon bepo.bundle bepo.icns
 
 # copy tho licenses
 cp ../CC-SA-BY.txt ../GFDL.txt  "/Volumes/bépo ($VERSION)"

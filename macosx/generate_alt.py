@@ -3,7 +3,7 @@
 #
 # Génération des claviers alternatifs pour mac os 
 #
-# Copyright (C) 2017 Gaëtan Lehmann <gaetan.lehmann@gmail.com>
+# Copyright (C) 2008 Gaëtan Lehmann <gaetan.lehmann@jouy.inra.fr>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
