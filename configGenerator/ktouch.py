@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 #
 # Produit une carte de touches à partir d'un fichier xkb
 #
-# Copyright (C) 2017 Gaëtan Lehmann <gaetan.lehmann@gmail.com>
+# Copyright (C) 2008 Gaëtan Lehmann <gaetan.lehmann@jouy.inra.fr>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -11,18 +11,14 @@
 # of the License, or (at your option) any later version.
 #
 
-import codecs
-import sys
-
-import defaults
+import defaults, sys
 defaults.xkbFile = sys.argv[1]
 
-import dead_keys
-import xkb
+import xkb, dead_keys, codecs
 from terminators import terminators
 
 
-fullMapTmpl = keyboardTemplate = """# -*- coding: utf-8; -*-
+fullMapTmpl = keyboardTemplate = u"""# -*- coding: utf-8; -*-
 ####################################################
 #    KTouch
 #    Fichier de définition de clavier
@@ -48,9 +44,9 @@ FingerKey	%(AC10_code)s	%(AC10)s	108	20
 #
 #
 #  Touches modificatrices: Cette catégorie de touches
-#  recouvre les touches dites "de contrôle". Ces touches
+#  recouvre les touches dites "de contrôle". Ces touches 
 #  seront utilisées plus bas notament pour les majuscules
-#
+#  
 #               Unicode KeyText         x       y       Width  Height
 #
 ControlKey	260	Tab	0	10	15	10
@@ -66,12 +62,12 @@ ControlKey	259	CapsLock	0	20	18	10
 ControlKey	8	BackSpace	130	0	20	10
 #
 #
-#  Touches normales: Cette catégories recouvre toutes
-#  les touches por lesquelles vous n'avez pas besoin
-#  de taper autre chose qu'une touche pour écrire.
-#  A priori, ça correspond à toutes les minuscules et
-#  les chiffres (sur un qwerty). Pour cette catégorie,
-#  il faut indiquer avec quel doigt vous allez utiliser
+#  Touches normales: Cette catégories recouvre toutes 
+#  les touches por lesquelles vous n'avez pas besoin 
+#  de taper autre chose qu'une touche pour écrire. 
+#  A priori, ça correspond à toutes les minuscules et 
+#  les chiffres (sur un qwerty). Pour cette catégorie, 
+#  il faut indiquer avec quel doigt vous allez utiliser 
 #  (en indiquant sa touche de repos).
 #
 #       Unicode KeyText         x       y       FingerKey
@@ -128,7 +124,7 @@ NormalKey	%(AB10_code)s	%(AB10)s	113	30	%(AC10_code)s
 #
 #  Touches cachées: Ce sont les caractères inaccessibles
 #  directement. Cela signifie que vous devez utiliser une
-#  touche modificatrice pour les taper. A priori, ça
+#  touche modificatrice pour les taper. A priori, ça 
 #  concerne au moins les majuscules.
 #
 #      Unicode Target  Finger  Control
@@ -256,11 +252,11 @@ HiddenKey	%(AB10_code)s	%(AB10_option_code)s	%(AC10_code)s	264	#%(AB10_option)s
 """
 
 fullMapValues = {}
-for k, v in xkb.tmplValues.items():
-    v = terminators.get(v, v)
-    if v == "":
-        v = " "
-    fullMapValues[k] = v
-    fullMapValues[k+"_code"] = str(ord(v))
+for k, v in xkb.tmplValues.iteritems():
+   v = terminators.get( v, v )
+   if v == "":
+     v = " "
+   fullMapValues[k] = v
+   fullMapValues[k+"_code"] = str(ord(v))
 out = codecs.open(sys.argv[2], "w", "utf8")
-out.write(fullMapTmpl % fullMapValues)
+out.write( fullMapTmpl % fullMapValues )
