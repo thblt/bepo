@@ -913,7 +913,7 @@ include "%L"
 <UFDD7> <U2A7E> : "≥" greaterthanequal
 <UFDD7> <at> : "⟶" U27F6
 <UFDD7> <6> : "⟼" U27FC
-<UFDD7> <asciicircum> : "‭" U202D
+<UFDD7> <asciicircum> : "◌⃗" U20D7
 <UFDD7> <U262D> : "⃕" U20D5
 <UFDD7> <plus> : "⊕" U2295
 <UFDD7> <7> : "⊞" U229E
